@@ -1,6 +1,12 @@
-#sidebar {
-width: 8%;
-align: left;
-opacity: 0.8;
-background-color: #f4f4f4;
+#side {
+	background-image: linear-gradient(to right, rgba(0,0,0, 0.5), rgba(0,0,0, 0.2));
+	width: 100px;
+	height: 100vh;
+	margin: 0px;
+}
+
+#btn_bubbles {
+	padding: 8px;	
+	display: block; 
+	margin: 0px auto;
 }
