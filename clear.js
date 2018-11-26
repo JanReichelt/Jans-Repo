@@ -1,8 +1,7 @@
-	console.log('haus');
-function clear() {
-	console.log('haus');
-	// var canvas1 = document.getElementsByTagName('CANVAS');
-	// for(var i = 0; i < canvas1.length; i++) {
-		// console.log(canvas1);
-		// }
+function cCanvas() {
+	var canvaslist = document.getElementsByTagName('CANVAS');
+	var body = document.getElementsByTagName('BODY')[0]; 
+	for(var i = 0; i < canvaslist.length; i++) {
+		body.removeChild(canvaslist[i]);
+	}
 }
