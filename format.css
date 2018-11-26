@@ -21,3 +21,11 @@
 	bottom: 12px;
 	width: 100px;
 }
+
+#remark {
+	position: absolute;
+	bottom: 32px;
+	font-size: 14pt;
+	font-weight: bold;
+	color: white;
+}
