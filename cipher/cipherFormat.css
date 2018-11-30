@@ -1,0 +1,95 @@
+/*
+	blau: 1E4363;
+	whiteyellow: FCF2CB;
+	orange: FFB00D;
+	daryellow: FF8926;
+	red: BC2D19;
+*/
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 1em;
+	grid-auto-rows: minmax(100px, auto);
+}
+
+.wrapper > div{
+	background: #DDDDDD;
+	padding: 1em;
+}
+
+.wrapper > div:nth-child(odd) {
+	background: #CCCCCC;
+}
+
+#header {
+	grid-column: 1/3;
+	background: #1E4363;
+}
+
+#verschlüsseln {
+	background: #FCF2CB;
+	position: relative;
+}
+
+#entschlüsseln {
+	background: #FCF2CB;
+	position: relative;
+}
+
+#output {
+	grid-column: 1/3;
+	background: #FFB00D;
+	vertical-align: middle;
+}
+
+h1 {
+	color: #FCF2CB;
+	margin-bottom: 0;
+	font-size: 50px;
+}
+
+h2 {
+	color: white;
+	font-size: 9pt;
+	margin: 0;
+}
+
+h3 {
+	color: #BC2D19;
+}
+
+.outputIntro {
+	font-weight: bold;
+	font-size: 22px;
+	color: #BC2D19;
+	vertical-align: middle;
+}
+
+.outputText {
+	font-weight: bold;
+	font-size: 18px;
+	vertical-align: middle;
+}
+
+.button {
+	background-color: #1E4363;
+	color: white;
+	margin-top: 0.5em;
+	/*position: absolute;
+	bottom: 6px;
+	*/
+}
+
+#dot {
+	font-weight: bold;
+	font-size: 35px;
+	color: #BC2D19;
+	margin-top: 1em;
+}
+
+.bracket {
+	font-weight: bold;
+	font-size: 60px;
+	color: #1E4363;
+}
