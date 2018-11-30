@@ -50,11 +50,11 @@ function cipher() {
     console.log(codedText);
 
     var outputPar = document.getElementById('output');
-    outputPar.innerHTML = 
-			"<p>" +
+    outputPar.innerHTML =
+      "<p class='outputIntro'>Dein verschlüsselter Text lautet:</p>" +
+      "<p>" +
 			"<span class='bracket'>{</span>" +
-			"<span class='outputIntro'>Dein verschlüsseltes Wort lautet: </span>" +
-			"<span class='outputText'" + codedText + " </span>" +
+			"<span class='outputText'>" + codedText + "</span>" +
 			"<span class='bracket'>}</span>" +
 			"</p>";
 		}
@@ -109,7 +109,13 @@ function decipher() {
     console.log(klartext);
 
     var outputPar = document.getElementById('output');
-    outputPar.innerHTML = "<span class='outputIntro'>Dein entschlüsseltes Wort lautet: <br><br></span>" + klartext;
+    outputPar.innerHTML =
+      "<p class='outputIntro'> Dein entschlüsselter Text lautet:</p>" +
+      "<p>" +
+      "<span class='bracket'>{</span>" +
+      "<span class='outputText'>" + klartext + "</span>" +
+      "<span class='bracket'>}</span>" +
+      "</p>";
 }
 
 // key auf Länge des text strecken
