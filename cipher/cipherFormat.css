@@ -1,16 +1,19 @@
 /*
-	blau: 1E4363;
+Farbschema:
+  blau: 1E4363;
 	whiteyellow: FCF2CB;
 	orange: FFB00D;
 	daryellow: FF8926;
 	red: BC2D19;
 */
 
+
+/**CSS Grid**/
 .wrapper {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 1em;
-	grid-auto-rows: minmax(100px, auto);
+	grid-auto-rows: minmax(80px, auto);
 }
 
 .wrapper > div{
@@ -18,10 +21,8 @@
 	padding: 1em;
 }
 
-.wrapper > div:nth-child(odd) {
-	background: #CCCCCC;
-}
 
+/**Grid-Container**/
 #header {
 	grid-column: 1/3;
 	background: #1E4363;
@@ -40,7 +41,19 @@
 #output {
 	grid-column: 1/3;
 	background: #FFB00D;
-	vertical-align: middle;
+  padding-left: 0.5em;
+  position: relative;
+}
+
+#back {
+  background: white;
+  justify-content: end;
+}
+
+/**Normal CSS**/
+body {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 h1 {
@@ -57,28 +70,82 @@ h2 {
 
 h3 {
 	color: #BC2D19;
+  font-size: 22px;
+}
+
+
+/**Tooltip**/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #FFB00D;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    position: absolute;
+    z-index: 1;
+    top: -5em;
+    left: 2em;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+/***Form-Style*/
+#textInput {
+  width: 100%;
+  height: 4em;
+  border-radius: 0.2em;
+}
+
+#codeInput {
+  width: 100%;
+  height: 4em;
+  border-radius: 0.2em;
+}
+
+#outputPar {
+  margin-top: 5%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .outputIntro {
 	font-weight: bold;
 	font-size: 22px;
 	color: #BC2D19;
-	vertical-align: middle;
+  position: absolute;
+  top: 0em;
+  left: 1em;
 }
 
 .outputText {
 	font-weight: bold;
-	font-size: 18px;
-	vertical-align: middle;
+	font-size: 22px;
 }
 
 .button {
 	background-color: #1E4363;
 	color: white;
-	margin-top: 0.5em;
-	/*position: absolute;
-	bottom: 6px;
-	*/
+  width: 5em;
+  height: 2em;
+  border: none;
+  border-radius: 1em;
+
+	position: absolute;
+	bottom: 1em;
+  right: 1em;
 }
 
 #dot {
@@ -90,6 +157,13 @@ h3 {
 
 .bracket {
 	font-weight: bold;
-	font-size: 60px;
+	font-size: 65px;
 	color: #1E4363;
+}
+
+#footer {
+  text-align: right;
+  font-size: 9pt;
+  color: #FCF2CB;
+  margin-bottom: 0;
 }
