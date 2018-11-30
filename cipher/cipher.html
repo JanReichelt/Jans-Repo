@@ -10,38 +10,54 @@
 
    <title>Cipher</title>
 
-   <link rel="stylesheet" href="cipherFormat.css" type="text/css">
+   <link rel="stylesheet" type="text/css" href="cipherFormat.css">
  </head>
 
 
  <body>
-   <h1>Cipher</h1>
-   <div id="verschlüsseln">
-   <form id="cipherForm">
-       <label for="inputText"><h3>Was soll verschlüsselt werden?</h3></label><br><br>
-       Gib hier Deinen Text ein, der verschlüsselt werden soll: <br>
-       <input type="text" id="textInput"></input><br><br>
-       Und hier einen beliebigen Key: <br>
-       <input type="text" id="keyInput"></input><br>
-       <input type="button" value="submit" onClick="cipher()">
-     </form>
-     <p id="output"></p>
-   </div>
-   <br>
+	<div class="wrapper">
+	
+		<div id="header">
+			<h1>Cipher<span id="dot">.</span></h1>
+			<h2>Ein einfaches Verschlüsselungsprogramm</h2>
+		</div>
+	
+		<div id="verschlüsseln">
+			<form>
+				<div class="nested">
+					<label for="inputText"><h3>Was soll verschlüsselt werden?</h3></label>
+					Dein Text, der verschlüsselt werden soll: <br>
+					<input type="text" id="textInput"></input><br><br>
+					Ein beliebiger Key: <br>
+					<input type="text" id="keyInput"></input><br>
+					<input type="button" class="button" value="submit" onClick="cipher()">
+				</div>
+			</form>
+		</div>
 
-   <div id="entschlüsseln">
-     <form>
-    <label for="inputCode"><h3>Was soll entschlüsselt werden?</h3></label><br><br>
-      Gib hier Deinen verschlüsselten Text ein, der entschlüsselt werden soll: <br>
-       <input type="text" id="codeInput" ></input><br><br>
-       Und hier den genutzten Key: <br>
-       <input type="text" id="deKeyInput" ></input>
-       <br>
-       <input type="button" value="submit" onClick="decipher()">
-     </form>
-     <p id="output"></p>
-   </div>
-
+		<div id="entschlüsseln">
+			<form>
+				<div class="nested">
+					<label for="inputCode"><h3>Was soll entschlüsselt werden?</h3></label>
+					Dein verschlüsselter Text: <br>
+					<input type="text" id="codeInput" ></input><br><br>
+					Dein genutzter Key: <br>
+					<input type="text" id="deKeyInput" ></input>
+					<br>
+					<input type="button" class="button" value="submit" onClick="decipher()">
+				</div>
+			</form>
+		</div>
+	
+	
+		<div id="output">
+			 <p id="outputPar">
+			 <span class="bracket">{<span>
+			 <span class="outputIntro">Dein ver-/entschlüsselter Text</span>
+			 <span class="bracket">}<span></p>
+		</div>
+	</div>
+	
    <br><br><br>
    <button type="button" onClick="window.location.href='https://janreichelt.github.io/Jans-Repo/'">Back</button>
    <script src="cipher.js"></script>
