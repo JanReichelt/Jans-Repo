@@ -1,0 +1,23 @@
+body {
+  font-family: "helvetica neue";
+  padding-left: 0 20%;
+  margin-left: 15%;
+  color: #666;
+}
+
+li input{
+  display: none;
+}
+
+li.edit input {
+  display: initial;
+}
+
+li.edit span {
+  display: none;
+}
+
+#plus:hover {
+  color: orange;
+  cursor: copy;
+}
