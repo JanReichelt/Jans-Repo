@@ -5,7 +5,21 @@ body {
   color: #666;
 }
 
+i#delete{
+  color: #d44;
+  /*display: none; -- that works! */
+}
+
+i#delete:hover {
+  color: orange;
+  cursor: crosshair;
+}
+
 li input{
+  display: none;
+}
+
+li i#delete {
   display: none;
 }
 
@@ -13,8 +27,16 @@ li.edit input {
   display: initial;
 }
 
+li.edit i#delete{
+  display: initial;
+}
+
 li.edit span {
   display: none;
+}
+
+#plus {
+  color: #444;
 }
 
 #plus:hover {
