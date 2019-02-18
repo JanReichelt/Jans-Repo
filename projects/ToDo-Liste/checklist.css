@@ -1,0 +1,45 @@
+body {
+  font-family: "helvetica neue";
+  padding-left: 0 20%;
+  margin-left: 15%;
+  color: #666;
+}
+
+idelete{
+  color: #d44;
+  /*display: none; -- that works! */
+}
+
+i.delete:hover {
+  color: orange;
+  cursor: crosshair;
+}
+
+li input{
+  display: none;
+}
+
+li i.delete {
+  display: none;
+}
+
+li.edit input {
+  display: initial;
+}
+
+li.edit i.delete{
+  display: initial;
+}
+
+li.edit span {
+  display: none;
+}
+
+#plus {
+  color: #444;
+}
+
+#plus:hover {
+  color: orange;
+  cursor: copy;
+}

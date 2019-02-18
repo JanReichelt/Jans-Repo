@@ -1,0 +1,25 @@
+body{
+    text-align: center;
+    color: palegoldenrod;
+    background-image: radial-gradient(#2B780D, #134211);
+    /* background-image: url("pics/rasen_full.jpg");
+    background-repeat: no-repeat;
+    background-size: auto; */
+}
+
+#container{
+  width: 80%;
+  margin: 0 auto;
+}
+
+#board{
+  /* width: 80%; --- eigentlich ein nettes Feature, die Brettgröße interaktiv anpassen zu können, aber das behindert das Tracking der Maus (verschiebt die Koordinaten.)*/
+  margin: 0 auto;
+  background-image: url("pics/wood4.jpg");
+  background-color: orange;
+  position:relative;
+  border:2px solid black;
+  border-radius: 10px;
+  box-shadow: 0 5px 50px #333;
+  z-index: 0;
+}

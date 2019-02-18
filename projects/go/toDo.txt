@@ -1,0 +1,9 @@
+- div hinzufügen rechts neben Brett, zum Anzeigen von gefangenen Steinen, Zugzahl, ob s oder w am Zug ist und einen Knopf zum passem etc. (Schwarz, transparent mit w Schrift)
+- außerdem ein kleines div rechts zum Starten des Spiels (Spielfeldgröße eingeben, komi eingeben) - und damit instanziieren der Board-Klasse
+- JS-Logik!! --> erstmal einzelne Intersections zeichnen.
+-
+- UI: Einen Knopf (inkl. Form für Größe des Brettes) einfügen, um das Spiel zu Starten
+      Einen Knopf fürs passen einfügen
+- Zugcounter + lastPositions (inkl. UI Knöpfe zum ansehen älterer Positionen und Anzeige der Zugzahl)
+
+!!! Wie bestimme ich die Freiheiten einer Gruppe?? Und wie strukturiere ich das Codemäßig? Eine Move-Klasse?? Oder alles in die Intersection?
