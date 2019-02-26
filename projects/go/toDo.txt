@@ -7,3 +7,13 @@
 - Zugcounter + lastPositions (inkl. UI Knöpfe zum ansehen älterer Positionen und Anzeige der Zugzahl)
 
 !!! Wie bestimme ich die Freiheiten einer Gruppe?? Und wie strukturiere ich das Codemäßig? Eine Move-Klasse?? Oder alles in die Intersection?
+
+
+- Warum muss ich die Member einer Gruppe für jede Intersection einzeln einstellen? Sollte das nicht automatisch passieren, wenn sich die Intersections ein Gruppenobjekt teilen?? --> doch das groups-Array nutzen? Gibt es eine andere Möglichkeit eine this.group global zugänglich zu machen?
+
+- Warum stürzt das Programm ab, wenn ich einen Stein so setze, dass er eine Gruppe der gleichen Farbe an mehr als einer Stelle berührt? Wenn ich einen Stein genau zwischen zwei Gruppen derselben Farbe setze...
+
+
+- Problem lösen:
+  1. !!! Globale Liste und this.group ist nur Referenz oder
+  2. in this.group nur Koordinaten speichern.

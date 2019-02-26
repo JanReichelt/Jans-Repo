@@ -75,36 +75,40 @@ window.onload = function(){
 
     showIntersection() {
       // Darstellung der einzelnen Intersections (Linien und Steine der richtigen Farbe).
-      let wx = 0;
-      let wy = 0
-      const n = Object.entries(this.neighbors);
+      if (this.neighbors.top) {
+        c.beginPath();
+        c.moveTo(this.x+(w/2), this.y+(w/2));
+        c.lineTo(this.x+(w/2), this.y);
+        c.lineWidth = 2;
+        c.strokeStyle = 'black';
+        c.stroke();
+      }
 
-      for (const [direction, neighbor] of n) {
-        // Prüfen wo der aktuelle Nachbar liegt, damit die Linie in die richtige Richtung gezeichnet wird.
-        if (neighbor) {
-          if (neighbor.i < this.i) {
-            wx = -(w/2);
-          } else if (neighbor.i > this.i) {
-            wx = (w/2);
-          } else {
-            wx = 0;
-          }
-
-          if (neighbor.j < this.j) {
-            wy = -(w/2);
-          } else if (neighbor.j > this.j) {
-            wy = (w/2);
-          } else {
-            wy = 0;
-          }
-
+      if (this.neighbors.right) {
           c.beginPath();
-          c.moveTo(this.x + (w/2), this.y + (w/2));
-          c.lineTo((this.x + (w/2) + wx), (this.y + (w/2) + wy))
+          c.moveTo(this.x+(w/2), this.y+(w/2));
+          c.lineTo(this.x+w, this.y+(w/2));
           c.lineWidth = 2;
           c.strokeStyle = 'black';
           c.stroke();
-        }
+      }
+
+      if (this.neighbors.bottom) {
+          c.beginPath();
+          c.moveTo(this.x+(w/2), this.y+(w/2));
+          c.lineTo(this.x+(w/2), this.y+w);
+          c.lineWidth = 2;
+          c.strokeStyle = 'black';
+          c.stroke();
+      }
+
+      if (this.neighbors.left) {
+          c.beginPath();
+          c.moveTo(this.x+(w/2), this.y+(w/2));
+          c.lineTo(this.x, this.y+(w/2));
+          c.lineWidth = 2;
+          c.strokeStyle = 'black';
+          c.stroke();
       }
 
       if (this.state == 'black') {
@@ -119,6 +123,8 @@ window.onload = function(){
     setGroup(){
       // Führt alle Prüfungen aus, die zur Erstellung der Gruppe und der Gruppenmember nötig sind.
       // Erzeugt Gruppen und ermittelt die Member einer Gruppe.
+
+      // Variablen erstellen, die später als Bedingungen für die Regeln gebraucht werden.
       let liberties = 0;
       let same_neighbors = 0;
       let diff_neighbors = 0;
@@ -138,35 +144,73 @@ window.onload = function(){
 
 
       // Logik zum Zuordnen der Gruppen und Member
+            console.log("create new group:");
       groups.push(new Group(this));
       this.groupIndex = groups.length - 1;
       getGroup(this).members.add(this);
 
+
       if (same_neighbors >= 1) {
         for (let elem in this.neighbors) {
           if (this.neighbors[elem]) {
+            console.log(this.neighbors[elem]);
+            console.log(this.neighbors[elem].members);
+
             if (this.neighbors[elem].state == this.state) {
-              let nGroup = getGroup(this.neighbors[elem]);
-              nGroup.members.forEach(memb => getGroup(this).members.add(memb));
-              groups.splice(groups.indexOf(nGroup), 1);
-              groups.forEach(group => group.setIndex());
-              // console.log(groups);
+              // getGroup().members.add(elem.getGroup().members)
+              let bla = new Set([1, 12, 43, -2]);
+              console.log(bla);
+              console.log(elem);
+              // getGroup().members.add(bla);
+              for (let val of bla) {
+                getGroup().members.add(val)
               }
+
+              console.log(getGroup(this).members);
+              console.log(getGroup(elem));
+              // for (let val of elem.getGroup().members) {
+              //   console.log("say hi");
+              //   console.log(val);
+              // }
+
+
+              // elem.getGroup().members.forEach(memb => {groups[this.groupIndex].members.add(memb)});
+              // console.log(groups);
+              // let x = this.neighbors[elem].groupIndex;
+              //
+              // groups.splice(this.neighbors[elem].groupIndex, 1);
+              // console.log(groups);
+              //
+              // this.groupIndex -= 1;
+              // groups[this.neighbors[elem].groupIndex] = this.groupIndex;
+              //
+              // console.log("fertsch...-.-");
+              // break;
             }
           }
-          //Warum wird nlibs nicht angezeigt, wenn ich zugleich einen Stein der eigenen, wie auch der fremden Gruppe berühre.
-        } else if (diff_neighbors >= 1) {
-          for (let elem in this.neighbors) {
-            if (this.neighbors[elem]) {
-              if (this.neighbors[elem].state != this.state
-                && this.neighbors[elem].state != 'empty') {
-                  let nGroup = getGroup(this.neighbors[elem]);
-                  let li = nGroup.getLiberties();
-                  console.log("nLibs: " + li);
-              }
-            }
         }
       }
+
+
+      // this.group = new Group(this);
+
+      // if (same_neighbors >= 1) {
+      //   for (let elem in this.neighbors) {
+      //     if (this.neighbors[elem]) {
+      //       if (this.neighbors[elem].state == this.state) {
+      //         this.group.uniquifyMembers(this); //--> offenbar entsteht das rekursive Element
+      //         // dadurch, dass ein Member zweifach enthalten ist?! Deshalb ist es nicht mehr rekursiv,
+      //         // wenn ich die uniquify hier aufrufe...dafür verfielfachen sich die Intersections...
+      //         // GELÖST?????
+      //         for (let i = 0; i < this.neighbors[elem].group.members.length; i++) {
+      //           this.group.members.push(this.neighbors[elem].group.members[i]);
+      //         }
+      //         this.group.uniquifyMembers(this);
+      //         this.group.setMembers(this);
+      //       }
+      //     }
+      //   }
+      // }
     }
   }
 
@@ -198,44 +242,35 @@ window.onload = function(){
   }
 
   class Group{
+    // members = new Set();         // Hält fest welche Intersections sind in der eigenen Gruppe sind.
+
     constructor(intersection){
       this.members = new Set();
       let groupIndex;     // Index der Gruppe im Groups-Array.
-      this.liberties = 0;  // Anzahl der Freiheiten einer Gruppe. Wird direkt beim setzen ermittelt. Beim setzen werden auch direkt die Freiheiten der angrenzenden Gruppen angepasst.
+      let liberties;  // Anzahl der Freiheiten einer Gruppe. Wird direkt beim setzen ermittelt. Beim setzen werden auch direkt die Freiheiten der angrenzenden Gruppen angepasst.
       let groupColor;     // Farbe der Gruppe.
      }
 
-     setIndex() {
-       this.members.forEach(memb => {memb.groupIndex = groups.indexOf(this)});
+     setMembers(intersection) {
+       // Verteilt die komplette Anzahl der Gruppenmitglieder auf alle Steine der Gruppe.
+       console.log("setMembers aufgerufen");
+       intersection.group.members.forEach(function(elem){
+         console.log(elem);
+         console.log(intersection.group.members);
+         //Hier liegt das Problem!!
+         // Das Problem liegt darin, dass sich Intersections und group.members
+         // aufeinander beziehen und dadurch ein unendlicher Loop entsteht.
+         // unendlich wird der Loop aber erst, wenn der neue Stein zwei Steine
+         // derselben Farbe und Gruppe berührt...
+         elem.group.members = intersection.group.members;
+      });
      }
 
-     getLiberties() {
-       let lib = 0;
-       const counted = [];
-
-       this.members.forEach(memb => {
-         const n = Object.entries(memb.neighbors);
-         for (const [direction, neighbor] of n) {
-           if (neighbor && neighbor.state == 'empty' && !(counted.includes(neighbor))){
-             lib++;
-             counted.push(neighbor);
-           }
-         }
-       });
-       this.liberties = lib;
-       return lib;
-     }
-
-     takeGroup() {
-
-           // für jeden member:
-           // 1. set state == 'empty'
-           // 2. empty intersection darstellen
-           // 3. this.groupIndex = undefined;
-
-           // 4. Gruppe aus groups löschen
-           // für jede Gruppe in groups
-           // 5. setIndex
+     uniquifyMembers(intersection) {
+       // Entfernt Duplikate aus dem Array members durch die doppelte Umwandlung: Array --> Set --> Array
+       let memberSet = new Set(intersection.group.members);
+       // return Array.from(memberSet);
+       intersection.group.members = Array.from(memberSet);
      }
   }
 
@@ -260,26 +295,6 @@ window.onload = function(){
       lastMove = 'w';
     }
     intersection.setGroup();
-    let l = getGroup(intersection).getLiberties();
-    console.log("libs: "+ l);
-    if (l == 0) {
-      getGroup(intersection).takeGroup();
-    }
-
-    // if l für Nachbargruppe == 0 --> Nachbargruppe.takeGroup()
-
-
-
-    // console.log(getGroup(intersection));
-    // console.log(getGroup(intersection).liberties);
-    // if (getGroup(intersection).liberties == 0) {
-    //
-    //   groups.splice(groups.indexOf(intersection), 1);
-    //   groups.forEach(group => {
-    //     group.setIndex();
-    //     group.showIntersection();
-    //   });
-    // }
   }
 
   function getGroup(intersection) {

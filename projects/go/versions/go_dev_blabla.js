@@ -48,21 +48,20 @@ window.onload = function(){
 /// Set global variables
   const grid = [];    // Container für alle Intersection-Objekte auf dem Brett.
   const moves = [];   // Hier wird der Spielablauf gespeichert als geordnete Menge an grids. Anzahl der Züge ist moves.length-1.
-  const groups = [];  // Container für alle Stein-Gruppen im Spiel.
   let cols, rows;     // Anzahl der Zeilen und Spalten, die der Spieler zu Beginn auswählt.
   let w;              // die Breite und Höhe der Intersections, die sich aus canvas.width/cols ergibt.
   let lastMove = 'w'; // Was war der letzte Zug? Nächster Zug in anderer Farbe. Spiel beginnt mit "s".
 
 /// set classes
   class Intersection{
-    constructor(i, j) {
+    constructor(i, j, state) {
       this.i = i;         // i steht für die Spalte und j für die Zeile
       this.j = j;
-      this.state = 'empty'; // 'empty', 'white', 'black'
+      this.state = state; // 'empty', 'white', 'black'
       this.neighbors = {};
+      this.group = {};
       this.x = this.i * w;
       this.y = this.j * w;
-      let groupIndex;
     }
 
     setNeighbors(){
@@ -73,38 +72,42 @@ window.onload = function(){
       this.neighbors.left    = grid[index(this.i-1, this.j)];
     }
 
-    showIntersection() {
+    showIntersection(color) {
       // Darstellung der einzelnen Intersections (Linien und Steine der richtigen Farbe).
-      let wx = 0;
-      let wy = 0
-      const n = Object.entries(this.neighbors);
+      if (this.neighbors.top) {
+        c.beginPath();
+        c.moveTo(this.x+(w/2), this.y+(w/2));
+        c.lineTo(this.x+(w/2), this.y);
+        c.lineWidth = 2;
+        c.strokeStyle = color;
+        c.stroke();
+      }
 
-      for (const [direction, neighbor] of n) {
-        // Prüfen wo der aktuelle Nachbar liegt, damit die Linie in die richtige Richtung gezeichnet wird.
-        if (neighbor) {
-          if (neighbor.i < this.i) {
-            wx = -(w/2);
-          } else if (neighbor.i > this.i) {
-            wx = (w/2);
-          } else {
-            wx = 0;
-          }
-
-          if (neighbor.j < this.j) {
-            wy = -(w/2);
-          } else if (neighbor.j > this.j) {
-            wy = (w/2);
-          } else {
-            wy = 0;
-          }
-
+      if (this.neighbors.right) {
           c.beginPath();
-          c.moveTo(this.x + (w/2), this.y + (w/2));
-          c.lineTo((this.x + (w/2) + wx), (this.y + (w/2) + wy))
+          c.moveTo(this.x+(w/2), this.y+(w/2));
+          c.lineTo(this.x+w, this.y+(w/2));
           c.lineWidth = 2;
-          c.strokeStyle = 'black';
+          c.strokeStyle = color;
           c.stroke();
-        }
+      }
+
+      if (this.neighbors.bottom) {
+          c.beginPath();
+          c.moveTo(this.x+(w/2), this.y+(w/2));
+          c.lineTo(this.x+(w/2), this.y+w);
+          c.lineWidth = 2;
+          c.strokeStyle = color;
+          c.stroke();
+      }
+
+      if (this.neighbors.left) {
+          c.beginPath();
+          c.moveTo(this.x+(w/2), this.y+(w/2));
+          c.lineTo(this.x, this.y+(w/2));
+          c.lineWidth = 2;
+          c.strokeStyle = color;
+          c.stroke();
       }
 
       if (this.state == 'black') {
@@ -119,6 +122,8 @@ window.onload = function(){
     setGroup(){
       // Führt alle Prüfungen aus, die zur Erstellung der Gruppe und der Gruppenmember nötig sind.
       // Erzeugt Gruppen und ermittelt die Member einer Gruppe.
+
+      // Variablen erstellen, die später als Bedingungen für die Regeln gebraucht werden.
       let liberties = 0;
       let same_neighbors = 0;
       let diff_neighbors = 0;
@@ -126,45 +131,42 @@ window.onload = function(){
       for (let elem in this.neighbors) {
         if (this.neighbors[elem]) {
           if(this.neighbors[elem].state == 'empty') {
-              liberties++;
+             liberties++;
           } else if (this.neighbors[elem].state == this.state){
-              same_neighbors++;
+            same_neighbors++;
           } else if (this.neighbors[elem].state != this.state
                     && this.neighbors[elem].state != 'empty') {
-              diff_neighbors++;
+            diff_neighbors++;
           }
         }
       }
 
-
       // Logik zum Zuordnen der Gruppen und Member
-      groups.push(new Group(this));
-      this.groupIndex = groups.length - 1;
-      getGroup(this).members.add(this);
-
+      this.group = new Group(this);
+      console.log("neue Gruppe");
+      console.log(this.neighbors);
       if (same_neighbors >= 1) {
         for (let elem in this.neighbors) {
+          console.log("-----");
+          console.log(this.neighbors);
+          console.log(elem);
           if (this.neighbors[elem]) {
             if (this.neighbors[elem].state == this.state) {
-              let nGroup = getGroup(this.neighbors[elem]);
-              nGroup.members.forEach(memb => getGroup(this).members.add(memb));
-              groups.splice(groups.indexOf(nGroup), 1);
-              groups.forEach(group => group.setIndex());
-              // console.log(groups);
+              for (let i = 0; i < this.neighbors[elem].group.members.length; i++) {
+                console.log("-1-");
+                console.log(this.neighbors[elem].group.members);
+                console.log(this.group.members);
+                console.log("-1-");
+                this.group.members.push(this.neighbors[elem].group.members[i]);
+                console.log("-2-");
+                console.log(this.neighbors[elem].group.members);
+                console.log(this.group.members);
+                console.log("-2-");
               }
+              this.group.uniquifyMembers(this);
+              this.group.setMembers(this);
             }
           }
-          //Warum wird nlibs nicht angezeigt, wenn ich zugleich einen Stein der eigenen, wie auch der fremden Gruppe berühre.
-        } else if (diff_neighbors >= 1) {
-          for (let elem in this.neighbors) {
-            if (this.neighbors[elem]) {
-              if (this.neighbors[elem].state != this.state
-                && this.neighbors[elem].state != 'empty') {
-                  let nGroup = getGroup(this.neighbors[elem]);
-                  let li = nGroup.getLiberties();
-                  console.log("nLibs: " + li);
-              }
-            }
         }
       }
     }
@@ -178,7 +180,7 @@ window.onload = function(){
 
       for(let j = 0; j < rows; j++) {
         for(let i = 0; i < cols; i++){
-          grid.push(new Intersection(i, j));
+          grid.push(new Intersection(i, j, "empty"));
         }
       }
 
@@ -191,51 +193,35 @@ window.onload = function(){
       // Stellt alle Intersections im grid als Spielbrett dar.
       for (let i = 0; i < cols*rows; i++) {
         if (grid[i] != undefined) {
-          grid[i].showIntersection();
+          grid[i].showIntersection("black");
         }
       }
     }
   }
 
   class Group{
+    members = [];         // Hält fest welche Intersections sind in der eigenen Gruppe sind.
     constructor(intersection){
-      this.members = new Set();
-      let groupIndex;     // Index der Gruppe im Groups-Array.
-      this.liberties = 0;  // Anzahl der Freiheiten einer Gruppe. Wird direkt beim setzen ermittelt. Beim setzen werden auch direkt die Freiheiten der angrenzenden Gruppen angepasst.
+      this.members.push([intersection.i, intersection.j]);
+      let liberties = 0;  // Anzahl der Freiheiten einer Gruppe. Wird direkt beim setzen ermittelt. Beim setzen werden auch direkt die Freiheiten der angrenzenden Gruppen angepasst.
       let groupColor;     // Farbe der Gruppe.
      }
 
-     setIndex() {
-       this.members.forEach(memb => {memb.groupIndex = groups.indexOf(this)});
+     setMembers(intersection) {
+       // Verteilt die komplette Anzahl der Gruppenmitglieder auf alle Steine der Gruppe.
+       console.log("setMembers aufgerufen");
+       intersection.group.members.forEach(function(elem){
+         console.log(elem);
+         console.log(intersection.group.members);
+         elem.group.members = intersection.group.members;
+      });
      }
 
-     getLiberties() {
-       let lib = 0;
-       const counted = [];
-
-       this.members.forEach(memb => {
-         const n = Object.entries(memb.neighbors);
-         for (const [direction, neighbor] of n) {
-           if (neighbor && neighbor.state == 'empty' && !(counted.includes(neighbor))){
-             lib++;
-             counted.push(neighbor);
-           }
-         }
-       });
-       this.liberties = lib;
-       return lib;
-     }
-
-     takeGroup() {
-
-           // für jeden member:
-           // 1. set state == 'empty'
-           // 2. empty intersection darstellen
-           // 3. this.groupIndex = undefined;
-
-           // 4. Gruppe aus groups löschen
-           // für jede Gruppe in groups
-           // 5. setIndex
+     uniquifyMembers(intersection) {
+       // Entfernt Duplikate aus dem Array members durch die doppelte Umwandlung: Array --> Set --> Array
+       let memberSet = new Set(intersection.group.members);
+       // return Array.from(memberSet);
+       intersection.group.members = Array.from(memberSet);
      }
   }
 
@@ -252,42 +238,14 @@ window.onload = function(){
     // Setzt Intersection auf die entsprechend andere Farbe
     if (lastMove == 'w'){
       intersection.state = 'black';
-      intersection.showIntersection();
+      intersection.showIntersection("black");
       lastMove = 'b'
     } else if (lastMove == 'b'){
       intersection.state = 'white';
-      intersection.showIntersection();
+      intersection.showIntersection("black");
       lastMove = 'w';
     }
     intersection.setGroup();
-    let l = getGroup(intersection).getLiberties();
-    console.log("libs: "+ l);
-    if (l == 0) {
-      getGroup(intersection).takeGroup();
-    }
-
-    // if l für Nachbargruppe == 0 --> Nachbargruppe.takeGroup()
-
-
-
-    // console.log(getGroup(intersection));
-    // console.log(getGroup(intersection).liberties);
-    // if (getGroup(intersection).liberties == 0) {
-    //
-    //   groups.splice(groups.indexOf(intersection), 1);
-    //   groups.forEach(group => {
-    //     group.setIndex();
-    //     group.showIntersection();
-    //   });
-    // }
-  }
-
-  function getGroup(intersection) {
-    if (groups.length > 0) {
-      return groups[intersection.groupIndex];
-    } else {
-      return null;
-    }
   }
 
 /// Get it going
@@ -295,22 +253,25 @@ window.onload = function(){
   var b = new Board(9 , 9); //Immer die größere Zahl zuerst!!
   b.showBoard();
 
-  function mouse(event) {
-    var mouseX = event.clientX - canvas.getBoundingClientRect().left;
-    var mouseY = event.clientY - canvas.getBoundingClientRect().top;
+    function mouse(event) {
+      var mouseX = event.clientX - canvas.getBoundingClientRect().left;
+      var mouseY = event.clientY - canvas.getBoundingClientRect().top;
 
-    for (let i = 0; i < cols*rows; i++) {
-      if (mouseX >= grid[i].x
-      && mouseX <= grid[i].x + w
-      && mouseY <= grid[i].y + w
-      && mouseY >= grid[i].y) {
-        if (grid[i].state == 'empty'){
-          move(grid[i]);
-          break;
+      if (event.type == 'click') {
+        for (let i = 0; i < cols*rows; i++) {
+          if (mouseX >= grid[i].x
+          && mouseX <= grid[i].x + w
+          && mouseY <= grid[i].y + w
+          && mouseY >= grid[i].y) {
+            if (grid[i].state == 'empty'){
+              move(grid[i]);
+              break;
+            } else break;
         }
       }
     }
   }
 
+  canvas.addEventListener('mousemove', mouse, false);
   canvas.addEventListener('click', mouse, false);
 }
