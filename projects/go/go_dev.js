@@ -62,7 +62,7 @@ window.onload = function(){
       this.neighbors = {};
       this.x = this.i * w;
       this.y = this.j * w;
-      let groupIndex;
+      this.groupIndex;
     }
 
     setNeighbors(){
@@ -143,28 +143,31 @@ window.onload = function(){
       getGroup(this).members.add(this);
 
       if (same_neighbors >= 1) {
+        let sNGroup;
         for (let elem in this.neighbors) {
           if (this.neighbors[elem]) {
             if (this.neighbors[elem].state == this.state) {
-              let nGroup = getGroup(this.neighbors[elem]);
-              nGroup.members.forEach(memb => getGroup(this).members.add(memb));
-              groups.splice(groups.indexOf(nGroup), 1);
+              sNGroup = getGroup(this.neighbors[elem]);
+              sNGroup.members.forEach(memb => getGroup(this).members.add(memb));
+              groups.splice(groups.indexOf(sNGroup), 1);
               groups.forEach(group => group.setIndex());
-              // console.log(groups);
-              }
             }
           }
-          //Warum wird nlibs nicht angezeigt, wenn ich zugleich einen Stein der eigenen, wie auch der fremden Gruppe berühre.
-        } else if (diff_neighbors >= 1) {
-          for (let elem in this.neighbors) {
-            if (this.neighbors[elem]) {
-              if (this.neighbors[elem].state != this.state
-                && this.neighbors[elem].state != 'empty') {
-                  let nGroup = getGroup(this.neighbors[elem]);
-                  let li = nGroup.getLiberties();
-                  console.log("nLibs: " + li);
-              }
+        }
+      }
+
+      if (diff_neighbors >= 1) {
+        let dNGroup;
+        let li;
+        for (let elem in this.neighbors) {
+          if (this.neighbors[elem]) {
+            if (this.neighbors[elem].state != this.state
+              && this.neighbors[elem].state != 'empty') {
+                dNGroup = getGroup(this.neighbors[elem]);
+                li = dNGroup.getLiberties();
+                console.log("nLibs: " + li);
             }
+          }
         }
       }
     }
@@ -227,11 +230,25 @@ window.onload = function(){
      }
 
      takeGroup() {
+       console.log(groups);
+       groups.splice(groups.indexOf(this), 1);
+       console.log(groups);
+       this.members.forEach(memb => {
+         memb.state = 'empty';
+         console.log("memb.state: " + memb.state);
+         c.clearRect(memb.x, memb.y, w, w);
+         memb.showIntersection();
+         memb.groupIndex = groups.indexOf(getGroup(memb));
+         console.log("Index of group: " + memb.groupIndex);
+       });
+
 
            // für jeden member:
            // 1. set state == 'empty'
            // 2. empty intersection darstellen
            // 3. this.groupIndex = undefined;
+
+           // Für die Gruppe, die an die andere Gruppe anlag, jeweils eine Freiheit dazurechnen (aber nicht doppelt...)
 
            // 4. Gruppe aus groups löschen
            // für jede Gruppe in groups
@@ -259,12 +276,27 @@ window.onload = function(){
       intersection.showIntersection();
       lastMove = 'w';
     }
+
     intersection.setGroup();
     let l = getGroup(intersection).getLiberties();
-    console.log("libs: "+ l);
-    if (l == 0) {
-      getGroup(intersection).takeGroup();
-    }
+    console.log('Libs: ' + l);
+
+
+    const n = Object.entries(intersection.neighbors);
+    for (const [direction, neighbor] of n) {
+      if(neighbor && getGroup(neighbor)) {  // Nur, wenn der Nachbar eine Intersection ist (also nicht über Rand) und eine Gruppe hat (also nicht leer).
+        console.log(neighbor);
+        console.log(getGroup(neighbor).getLiberties());
+        if(getGroup(neighbor).getLiberties() == 0) {
+          getGroup(neighbor).takeGroup()
+        }
+      }
+      if (l == 0) {
+        console.log(getGroup(intersection));
+        getGroup(intersection).takeGroup();
+      }
+
+    };
 
     // if l für Nachbargruppe == 0 --> Nachbargruppe.takeGroup()
 
