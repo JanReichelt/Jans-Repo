@@ -116,6 +116,14 @@ window.onload = function(){
       }
     }
 
+    get group() {
+      if (groups.length > 0) {
+        return groups[this.groupIndex];
+      } else {
+        return null;
+      }
+    }
+
     setGroup(){
       // Führt alle Prüfungen aus, die zur Erstellung der Gruppe und der Gruppenmember nötig sind.
       // Erzeugt Gruppen und ermittelt die Member einer Gruppe.
@@ -136,19 +144,18 @@ window.onload = function(){
         }
       }
 
-
       // Logik zum Zuordnen der Gruppen und Member
       groups.push(new Group(this));
       this.groupIndex = groups.length - 1;
-      getGroup(this).members.add(this);
+      this.group.members.add(this);
 
       if (same_neighbors >= 1) {
         let sNGroup;
         for (let elem in this.neighbors) {
           if (this.neighbors[elem]) {
             if (this.neighbors[elem].state == this.state) {
-              sNGroup = getGroup(this.neighbors[elem]);
-              sNGroup.members.forEach(memb => getGroup(this).members.add(memb));
+              sNGroup = this.neighbors[elem].group;
+              sNGroup.members.forEach(memb => this.group.members.add(memb));
               groups.splice(groups.indexOf(sNGroup), 1);
               groups.forEach(group => group.setIndex());
             }
@@ -163,7 +170,8 @@ window.onload = function(){
           if (this.neighbors[elem]) {
             if (this.neighbors[elem].state != this.state
               && this.neighbors[elem].state != 'empty') {
-                dNGroup = getGroup(this.neighbors[elem]);
+                console.log(this.group);
+                dNGroup = this.neighbors[elem].group;
                 li = dNGroup.getLiberties();
                 console.log("nLibs: " + li);
             }
@@ -238,7 +246,7 @@ window.onload = function(){
          console.log("memb.state: " + memb.state);
          c.clearRect(memb.x, memb.y, w, w);
          memb.showIntersection();
-         memb.groupIndex = groups.indexOf(getGroup(memb));
+         memb.groupIndex = groups.indexOf(memb.group);
          console.log("Index of group: " + memb.groupIndex);
        });
 
@@ -278,22 +286,22 @@ window.onload = function(){
     }
 
     intersection.setGroup();
-    let l = getGroup(intersection).getLiberties();
+    let l = intersection.group.getLiberties();
     console.log('Libs: ' + l);
 
 
     const n = Object.entries(intersection.neighbors);
     for (const [direction, neighbor] of n) {
-      if(neighbor && getGroup(neighbor)) {  // Nur, wenn der Nachbar eine Intersection ist (also nicht über Rand) und eine Gruppe hat (also nicht leer).
+      if(neighbor && neighbor.group) {  // Nur, wenn der Nachbar eine Intersection ist (also nicht über Rand) und eine Gruppe hat (also nicht leer).
         console.log(neighbor);
-        console.log(getGroup(neighbor).getLiberties());
-        if(getGroup(neighbor).getLiberties() == 0) {
-          getGroup(neighbor).takeGroup()
+        console.log(neighbor.group.getLiberties());
+        if(neighbor.group.getLiberties() == 0) {
+          neighbor.group.takeGroup()
         }
       }
       if (l == 0) {
-        console.log(getGroup(intersection));
-        getGroup(intersection).takeGroup();
+        console.log(intersection.group);
+        intersection.group.takeGroup();
       }
 
     };
@@ -302,9 +310,9 @@ window.onload = function(){
 
 
 
-    // console.log(getGroup(intersection));
-    // console.log(getGroup(intersection).liberties);
-    // if (getGroup(intersection).liberties == 0) {
+    // console.log(intersection.group);
+    // console.log(intersection.group.liberties);
+    // if (intersection.group.liberties == 0) {
     //
     //   groups.splice(groups.indexOf(intersection), 1);
     //   groups.forEach(group => {
@@ -312,14 +320,6 @@ window.onload = function(){
     //     group.showIntersection();
     //   });
     // }
-  }
-
-  function getGroup(intersection) {
-    if (groups.length > 0) {
-      return groups[intersection.groupIndex];
-    } else {
-      return null;
-    }
   }
 
 /// Get it going
