@@ -172,7 +172,7 @@ window.onload = function(){
               && this.neighbors[elem].state != 'empty') {
                 console.log(this.group);
                 dNGroup = this.neighbors[elem].group;
-                li = dNGroup.getLiberties();
+                li = dNGroup.liberties;
                 console.log("nLibs: " + li);
             }
           }
@@ -212,7 +212,7 @@ window.onload = function(){
     constructor(intersection){
       this.members = new Set();
       let groupIndex;     // Index der Gruppe im Groups-Array.
-      this.liberties = 0;  // Anzahl der Freiheiten einer Gruppe. Wird direkt beim setzen ermittelt. Beim setzen werden auch direkt die Freiheiten der angrenzenden Gruppen angepasst.
+      // this.liberties;  // Anzahl der Freiheiten einer Gruppe. Wird direkt beim setzen ermittelt. Beim setzen werden auch direkt die Freiheiten der angrenzenden Gruppen angepasst.
       let groupColor;     // Farbe der Gruppe.
      }
 
@@ -220,7 +220,7 @@ window.onload = function(){
        this.members.forEach(memb => {memb.groupIndex = groups.indexOf(this)});
      }
 
-     getLiberties() {
+     get liberties() {
        let lib = 0;
        const counted = [];
 
@@ -233,7 +233,6 @@ window.onload = function(){
            }
          }
        });
-       this.liberties = lib;
        return lib;
      }
 
@@ -286,7 +285,7 @@ window.onload = function(){
     }
 
     intersection.setGroup();
-    let l = intersection.group.getLiberties();
+    let l = intersection.group.liberties;
     console.log('Libs: ' + l);
 
 
@@ -294,8 +293,8 @@ window.onload = function(){
     for (const [direction, neighbor] of n) {
       if(neighbor && neighbor.group) {  // Nur, wenn der Nachbar eine Intersection ist (also nicht über Rand) und eine Gruppe hat (also nicht leer).
         console.log(neighbor);
-        console.log(neighbor.group.getLiberties());
-        if(neighbor.group.getLiberties() == 0) {
+        console.log(neighbor.group.liberties);
+        if(neighbor.group.liberties == 0) {
           neighbor.group.takeGroup()
         }
       }
