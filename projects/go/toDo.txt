@@ -1,19 +1,24 @@
 - div hinzufügen rechts neben Brett, zum Anzeigen von gefangenen Steinen, Zugzahl, ob s oder w am Zug ist und einen Knopf zum passem etc. (Schwarz, transparent mit w Schrift)
 - außerdem ein kleines div rechts zum Starten des Spiels (Spielfeldgröße eingeben, komi eingeben) - und damit instanziieren der Board-Klasse
-- JS-Logik!! --> erstmal einzelne Intersections zeichnen.
 -
 - UI: Einen Knopf (inkl. Form für Größe des Brettes) einfügen, um das Spiel zu Starten
       Einen Knopf fürs passen einfügen
 - Zugcounter + lastPositions (inkl. UI Knöpfe zum ansehen älterer Positionen und Anzeige der Zugzahl)
 
-!!! Wie bestimme ich die Freiheiten einer Gruppe?? Und wie strukturiere ich das Codemäßig? Eine Move-Klasse?? Oder alles in die Intersection?
-
-
-- Warum muss ich die Member einer Gruppe für jede Intersection einzeln einstellen? Sollte das nicht automatisch passieren, wenn sich die Intersections ein Gruppenobjekt teilen?? --> doch das groups-Array nutzen? Gibt es eine andere Möglichkeit eine this.group global zugänglich zu machen?
 
 - Warum stürzt das Programm ab, wenn ich einen Stein so setze, dass er eine Gruppe der gleichen Farbe an mehr als einer Stelle berührt? Wenn ich einen Stein genau zwischen zwei Gruppen derselben Farbe setze...
 
 
-- Problem lösen:
-  1. !!! Globale Liste und this.group ist nur Referenz oder
-  2. in this.group nur Koordinaten speichern.
+Zusätzliche Features:
+- Multiplayer!! Zu dritt oder zu viert spielen mit der entsprechenden Farbe
+- Unendlichkeitsmodus, dass die Ränder direkt mit den gegenüberliegenden verknüpft sind
+- Löchriges Brett: Dafür sorgen, dass die Board-class kein komplettes grid erstellt sondern einzelne Intersections nur mit einer bestimmten Wahrscheinlichkeit baut bzw. Vorgegebene Patterns
+
+- Das Spiel nachvollziehen mit Pfeiltasten (die Liste der alten Grids durchgehen...)
+
+Regeln:
+- Ko
+- Seki
+- passen
+- Spielende
+- Zählen
