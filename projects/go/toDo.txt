@@ -3,18 +3,23 @@
 -
 - UI: Einen Knopf (inkl. Form für Größe des Brettes) einfügen, um das Spiel zu Starten
       Einen Knopf fürs passen einfügen
-- Zugcounter + lastPositions (inkl. UI Knöpfe zum ansehen älterer Positionen und Anzeige der Zugzahl)
 
 
-- Warum stürzt das Programm ab, wenn ich einen Stein so setze, dass er eine Gruppe der gleichen Farbe an mehr als einer Stelle berührt? Wenn ich einen Stein genau zwischen zwei Gruppen derselben Farbe setze...
+Aktuelle Bugs:
+- Bei komplizierten Zugstellungen werden Gruppen noch immer falsch erfasst, sowie ihre Freiheiten
+- so z.B. bei manchen (, nicht allen!) Snapback, wie bspw. der auf dem Screenshot im Go-Ordner.
+- Der startGame-Button funktioniert nicht (bzw. Nur ungefähr eine halbe Sekunde lang, dann wird das Spielfeld auf das ursprüngliche zurückgesetzt)
+- das moves-Array besteht aus n (wobei n die Anzahl der bisher gesetzten Züge) aktuellen grid-Arrays. Wird bei moves.push(push); nur eine Referenz zum grid-Array übergeben? Wie kann ich das grid-Array im aktuellen Stand übergeben?
 
 
 Zusätzliche Features:
 - Multiplayer!! Zu dritt oder zu viert spielen mit der entsprechenden Farbe
 - Unendlichkeitsmodus, dass die Ränder direkt mit den gegenüberliegenden verknüpft sind
 - Löchriges Brett: Dafür sorgen, dass die Board-class kein komplettes grid erstellt sondern einzelne Intersections nur mit einer bestimmten Wahrscheinlichkeit baut bzw. Vorgegebene Patterns
+- Schatten unten rechts unter den Steinen
 
 - Das Spiel nachvollziehen mit Pfeiltasten (die Liste der alten Grids durchgehen...)
+--> Die Liste ist aus irgendeinem Grund immer ein aktuelles grid-Array - d.h. ich habe den aktuellen Stand so oft, wie das Spiel Züge hatte. Lösung finden!
 
 Regeln:
 - Ko

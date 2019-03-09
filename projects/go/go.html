@@ -4,9 +4,12 @@
         <meta charset="UTF-8">
         <meta name="author" content="Jan Reichelt">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
         <link rel="stylesheet" href="go.css" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
         <title>Go</title>
     </head>
 
@@ -30,13 +33,21 @@
                 <p>[coming soon] </p>
             </div>
 
-            <div id="inGame" class="hidden">
-                In game.
+            <div id="inGame" class="">
 
+                <h3>Zug: </h3><div id="moveNr"></div>
+                <h3 id="capStones">Am Zug: </h3><div id="moveColor"></div>
+                <h3 id="capStones">gefangene Steine: </h3>
+                <div>Weiß: </div>
+                <div>Schwarz: </div>
+                <div id="capStonesW"></div>
+                <div id="capStonesB"></div>
             </div>
 
-            <div id="results" class="hidden">
+            <div id="results" class="">
                 Results.
+                <button class="btn" id="btn-left" onclick="showMoveBack()"><i class="fas fa-chevron-left"></i></button>
+                <button class="btn" id="btn-right" onclick="showMoveForw()"><i class="fas fa-chevron-right"></i></button>
 
             </div>
         </div>
