@@ -1,0 +1,86 @@
+* {
+    /* https://css-tricks.com/things-it-might-be-funuseful-to-try-the-universal-selector-on/#article-header-id-2 */
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+}
+
+body{
+    height: 100vh;
+    width: 10vw;
+    background-image: radial-gradient(#2B780D, #134211);
+    background-color: #134211;
+    font-family: 'Mukta', sans-serif;
+    /* Hintergrundbild fixieren, damit der Gradientimmer an der gleichen Stelle bleibt */
+}
+
+.container{
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(200, 1fr)); */
+    /* grid-template-columns: repeat(4, minmax(200, 1fr)); */
+    grid-template-columns: repeat(4, auto);
+    grid-template-rows: repeat(4, 1fr);
+    /* grid-template-rows: repeat(auto-fill, minmax(100, 200)); */
+    grid-gap: 1vw;
+
+    width: 90vh;
+    height: 90vh;
+    margin: 0 auto;
+    padding: 1vw;
+    /* overflow: auto; */
+}
+
+.box {
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 0 5px 50px #333;
+    z-index: 0;
+}
+
+.container .grid-box {
+    margin: 0 auto;
+    padding: 1vw;
+    color: #DDDDDDFF;
+    background-color: #000000AA;
+    width: 21vw;
+    height: 21vw;
+    overflow: auto;
+}
+
+#board {
+    grid-column: 1/4;
+    grid-row: 1/4;
+    width: 65.5vw;
+    max-width: 1024px;
+    max-height: 1024px;
+    height: 65.5vw;
+    background-image: url("pics/wood4.jpg");
+    background-color: burlywood;
+}
+
+@media screen and (max-width: 760px) {
+    .container {
+        height: 100vh;
+        width: 100vw;
+        grid-template-columns: repeat(3, 1fr);
+        /* grid-template-rows: repeat(3, 1fr); */
+        grid-template-rows: minmax(max-content, max-content);
+    }
+
+    #board {
+        grid-column: 1/4;
+        grid-row: 1/4;
+        width: 90vw;
+        height: 90vw;
+        align-self: start;
+    }
+
+    .grid-box {
+        width: 40vw;
+        height: 40vw;
+    }
+
+}

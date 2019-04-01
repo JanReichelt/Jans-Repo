@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="format.css">
+    <link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <title>GO!</title>
+</head>
+
+<body>
+    <div class="container">
+        <canvas id="board" class="grid-box box">
+        </canvas>
+
+
+
+        <div id="startGame" class="grid-box box">
+            <h3>Spielstart</h3>
+            <hr>
+            <form id="gameSize" onsubmit="startGame()">
+                <label>Breite:</label><input type="text" id="inputX" class="sizeForm" placeholder="max. 40" value="9"><br>
+                <label>Höhe:</label><input type="text" id="inputY" class="sizeForm" placeholder="max. 40" value="9"><br>
+                <h3>Game Modes: </h3>
+                <p>[coming soon] </p>
+            </form>
+            <button id="btn-start" class="btn btn-fullwidth" onclick="startGame()">Start</button>
+        </div>
+
+
+
+        <div id="inGame" class="grid-box box">
+            <h3>Spielstand</h3>
+            <hr>
+            <p>Zug: <span class="output">Nummer</span></p>
+            <p>Am Zug: <span class="output">Spieler</span></p>
+            <h3>Gefangene Steine: </h3>
+            <p>Weiß: <span class="output">Steine</span></p>
+            <p>Schwarz: <span class="output">Steine</span></p>
+            <button id="btn-restart" class="btn" onclick="restart()">Neustart</button>
+            <button id="btn-pass" class="btn">Passen</button>
+        </div>
+
+
+
+        <div id="endGame" class="grid-box box">
+            <h3>Auswertung</h3>
+            <hr>
+            <p>
+                <button class="btn" id="btn-left" onclick="showMoveBack()"><i class="fas fa-chevron-left"></i></button>
+                <button class="btn" id="btn-right" onclick="showMoveForw()"><i class="fas fa-chevron-right"></i></button>
+            </p>
+            <button id="btn-count" class="btn btn-fullwidth">Zählen</button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/group.js"></script>
+    <script src="js/intersection.js"></script>
+
+</body>
+</html>

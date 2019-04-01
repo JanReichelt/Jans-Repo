@@ -1,0 +1,23 @@
+## UI
+
+- Canvas Resizing überarbeiten. Sobald das Canvas nicht mehr in Originalgröße
+(=die im JS angegebene Größe) angezeigt wird, verschiedeben sich die Mouse-addEventListener
+- Restart gibt Chaos
+- Warum kann ich die Größenangaben im JS nicht weglassen? Dann wären alle Resizing-
+probleme durch CSS geregelt und es gäbe auch keine Probleme, dass das Bild verzerrt wird,
+da das Quadrat immer gleichmäßig vergrößert wird (und die Mouse-Events?)
+
+
+## Logik
+
+- game.saveMove() bezieht sich auf ein undefined, obwohl game initialisiert ist.
+-
+
+
+## Bernd
+- intersection.state als default-Argument übergeben state = 'empty'
+- this.neighbors als Array? Prüfungen einfügen, dass nur valide Intersections im Object/Array gespeichert werden. So brauche ich später nicht erneut prüfen, ob es diese Intersection auf dem Brett überhaupt braucht.
+- "for in" für das Iterieren über Objekte nochmal prüfen.
+- setGroup = set group??
+- get liberties: statt lib = 0 und counted - ein Set counted bauen und zum Schluss counted.length zurückgeben lassen
+- Zeile 194 ff. Prüfen! Was macht das?? Was wollte ich damit erreichen?

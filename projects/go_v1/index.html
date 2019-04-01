@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="pics/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="format.css">
+    <link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <title>GO!</title>
+</head>
+
+<body onresize="resizeCanvasToDisplaySize()">
+    <div class="container">
+        <canvas id="board" class="box">
+        </canvas>
+
+
+
+        <div id="startGame" class="box">
+            <h3>Spielstart</h3>
+            <hr>
+            <form id="gameSize" onsubmit="startGame()">
+                <label>Breite:</label><input type="text" id="inputX" class="sizeForm" placeholder="max. 40" value="9"><br>
+                <label>Höhe:</label><input type="text" id="inputY" class="sizeForm" placeholder="max. 40" value="9"><br>
+                <label>Komi:</label><input type="text" id="inputKomi" class="sizeForm" value="7.5"><br>
+                <h3>Game Modes: </h3>
+                <p style="color:#888888FF">[coming soon] </p>
+            </form>
+            <button id="btn-start" class="btn btn-fullwidth" onclick="startGame()">Start</button>
+        </div>
+
+
+
+        <div id="inGame" class="box hidden">
+            <h3>Spielstand</h3>
+            <hr>
+            <p>Zug: <span id="moveNr" class="output">Nummer</span></p>
+            <p>Am Zug: <span id="moveColor" class="output">Spieler</span></p>
+            <h3>Gefangene Steine: </h3>
+            <p>Weiß: <span id="capturedWhite" class="output">Steine</span></p>
+            <p>Schwarz: <span id="capturedBlack" class="output">Steine</span></p>
+            <button id="btn-resign" class="btn" onclick="resign()">Aufgeben</button>
+            <button id="btn-pass" class="btn" onclick="game.pass()">Passen</button>
+            <button id="btn-restart" class="btn" onclick="restart()"><i class="fas fa-paw"></i></button> <!-- class="fas fa-pizza-slice" oder Neustart -->
+
+        </div>
+
+
+
+        <div id="endGame" class="box hidden">
+            <h3>Auswertung</h3>
+            <hr>
+            <h3>Endstand:</h3>
+            <p>Weiß: <span id="pointsW" class="output">Punkte</span></p>
+            <p>Schwarz: <span id="pointsB" class="output">Punkte</span></p>
+            <p>Sieger: <span id="winner" class="output"></span></p>
+            <p>
+                <button class="btn" id="btn-left" onclick="showMoveBack()"><i class="fas fa-chevron-left"></i></button>
+                <button class="btn" id="btn-right" onclick="showMoveForw()"><i class="fas fa-chevron-right"></i></button>
+            </p>
+            <button id="btn-count" class="btn btn-fullwidth" onclick="game.count()">Zählen</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+    <script src="js/intersection.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

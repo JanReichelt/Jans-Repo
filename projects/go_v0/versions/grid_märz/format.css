@@ -1,0 +1,146 @@
+* {
+    /* https://css-tricks.com/things-it-might-be-funuseful-to-try-the-universal-selector-on/#article-header-id-2 */
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+body{
+    height: 130vh;
+    background-image: radial-gradient(#2B780D, #134211);
+    background-color: #134211;
+    background-position: center center;
+    background-attachment: fixed;
+    font-family: 'Mukta', sans-serif;
+    padding: 2vh;
+    overflow: hidden;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-gap: 1vw;
+
+    width: 90vw;
+    height: 90vw;
+    max-height: 130vh;
+    max-width: 130vh;
+    margin: auto;
+}
+
+.box {
+    padding: 1vw;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 0 5px 50px #333;
+    z-index: 0;
+    position: relative;
+    color: #BBBBBBFF;
+    background-color: #00000099;
+}
+
+hr {
+    border-color: #BBBBBB99;
+    border-width: 1px;
+}
+
+.btn {
+    display: block;
+    background-color: #00000066;
+    color: #BBBBBBFF;
+    border-color: #777777FF;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 0.5vw;
+}
+
+.btn-fullwidth {
+    width: 95%;
+    position: absolute;
+    bottom: 0.5vw;
+    left: 0.5vw;
+}
+
+#btn-pass {
+    width: 60%;
+    position: absolute;
+    bottom: 0.5vw;
+    left: 0.5vw;
+}
+
+#btn-restart {
+    width: 33%;
+    position: absolute;
+    bottom: 0.5vw;
+    left: calc(1vw + 60%);
+}
+
+.btn:hover {
+    background-color: #55555566;
+    color: #FFFFFFFF;
+}
+
+input[type=text] {
+    background-color: #00000066;
+    color: #BBBBBBFF;
+    border: 1px solid;
+    border-color: #777777FF;
+    border-width: 1px;
+    border-radius: 5px;
+    max-width: 50%;
+    position: absolute;
+    right: 0.5vw;
+    padding: 0 0.5vw;
+    text-align: center;
+}
+
+.output {
+    background-color: #00000066;
+    color: #BBBBBBFF;
+    border: 1px solid;
+    border-color: #777777FF;
+    border-width: 1px;
+    border-radius: 5px;
+    width: 50%;
+    position: absolute;
+    right: 0.5vw;
+    padding: 0 0.5vw;
+    text-align: center;
+}
+
+#board {
+    grid-column: 1/4;
+    grid-row: 1/4;
+    max-width: 1024px;
+    max-height: 1024px;
+    background-image: url("pics/wood4.jpg");
+    background-color: burlywood;
+    z-index: 1;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (max-width: 610px) { /*760px*/
+    .container {
+        height: 90vh;
+        width: 90vw;
+        max-height: 100vh;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: minmax(max-content, max-content);
+        grid-auto-rows: 30vw;
+        grid-auto-columns: 30vw;
+    }
+
+    #board {
+        grid-column: 1/4;
+        grid-row: 1/4;
+        width: 90vw;
+        height: 90vw;
+    }
+}
