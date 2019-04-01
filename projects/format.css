@@ -1,3 +1,8 @@
+body {
+	background-image: "wood_bg.jpg";
+	/* https://unsplash.com/photos/xVKEZ9wVIYM */
+}
+
 #side {
 	background-image: linear-gradient(to right, rgba(0,0,0, 0.7), rgba(0,0,0, 0.1));
 	width: 100px;
@@ -10,8 +15,8 @@
 }
 
 .buttons {
-	padding: 8px;	
-	display: block; 
+	padding: 8px;
+	display: block;
 	margin: 5px auto;
 	width: 80px;
 }
