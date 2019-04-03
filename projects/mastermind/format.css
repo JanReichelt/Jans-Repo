@@ -1,0 +1,30 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: green;
+    position: relative;
+    font-size: 2rem;
+    font-family: 'Mukta', sans-serif;
+}
+
+.btn {
+    position: absolute;
+    display: block;
+    background-color: #00000066;
+    color: #BBBBBBFF;
+    border-color: #777777FF;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 0.5vw;
+    z-index: 1;
+    top: 550px;
+    width: 150px;
+}
+
+#start {
+    left: 5px;
+}
+
+#confirm {
+    left: 165px;
+}
