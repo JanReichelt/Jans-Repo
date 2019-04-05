@@ -6,7 +6,7 @@ c.fillStyle = "#AAA";
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 
-const colors = ['black', 'yellow', 'orange', 'red', 'purple', 'blue', 'green'];
+const colors = ['#888', 'yellow', 'orange', 'red', 'purple', 'blue', 'green'];
 const dist = 60;
 const radius = 15;
 const rows = 8;
@@ -27,6 +27,12 @@ class Ball {
         c.arc(this.x, this.y, radius, 0, 2*Math.PI);
         c.fillStyle = colors[this.color];
         c.fill();
+
+        c.beginPath();
+        c.arc(this.x, this.y, radius+4, 0, 2*Math.PI);
+        c.lineWidth = 2;
+        c.strokeStyle = colors[0];
+        c.stroke();
     }
 }
 
@@ -38,7 +44,7 @@ class Line{
 
         // Fill the line with ball-objects.
         for (let i = 1; i <= cols; i++) {
-            this.line.push(new Ball(i*dist-dist/2, this.y));
+            this.line.push(new Ball(i*dist-dist/3, this.y));
         }
     }
 
@@ -49,10 +55,10 @@ class Line{
         }
 
         let x = ((cols+1) * dist)-dist/2;
-        this.fillResults(x-(radius/3), this.y-(radius/3), 0);
-        this.fillResults(x+(radius/3), this.y-(radius/3), 0);
-        this.fillResults(x-(radius/3), this.y+(radius/3), 0);
-        this.fillResults(x+(radius/3), this.y+(radius/3), 0);
+        this.fillResults(x-(radius/2), this.y-(radius/2), 0);
+        this.fillResults(x+(radius/2), this.y-(radius/2), 0);
+        this.fillResults(x-(radius/2), this.y+(radius/2), 0);
+        this.fillResults(x+(radius/2), this.y+(radius/2), 0);
     }
 
     fillResults(x, y, result) {
@@ -66,7 +72,7 @@ class Line{
             c.fillStyle = 'white'
             c.fill();
         } else {
-            c.strokeStyle = 'black';
+            c.strokeStyle = '#888';
             c.lineWidth = 1;
             c.stroke();
         }
@@ -76,10 +82,10 @@ class Line{
         results.sort((a, b) => b - a); // Sort in descending order, so that the rendering does'nt give hints.
         let x = ((cols+1) * dist)-dist/2;
 
-        this.fillResults(x-(radius/3), this.y-(radius/3), results[0]);
-        this.fillResults(x+(radius/3), this.y-(radius/3), results[1]);
-        this.fillResults(x-(radius/3), this.y+(radius/3), results[2]);
-        this.fillResults(x+(radius/3), this.y+(radius/3), results[3]);
+        this.fillResults(x-(radius/2), this.y-(radius/2), results[0]);
+        this.fillResults(x+(radius/2), this.y-(radius/2), results[1]);
+        this.fillResults(x-(radius/2), this.y+(radius/2), results[2]);
+        this.fillResults(x+(radius/2), this.y+(radius/2), results[3]);
     }
 
     toggleEditable() {
@@ -103,7 +109,7 @@ class Line{
         c.beginPath();
         c.strokeStyle = color;
         c.lineWidth = 5;
-        c.strokeRect(0, this.y-dist/2, canvas.width, dist);
+        c.strokeRect(2, this.y-dist/2, canvas.width-5, dist);
     }
 }
 
@@ -145,27 +151,43 @@ class Board {
         let results = []; // 0 = no match, 1 = match, 2 = perfect match
         let line = this.board[this.move].line
         let targetLine = this.targetLine.line;
-        let temp = 0;
+        let checked = {...colors};
+        let tLineColor = {...colors};
 
-        i:
-        for (let i = 0; i < line.length; i++){
-            temp = 0;
-            j:
-            for (let j = 0; j < targetLine.length; j++) {
-                if (line[i].color === targetLine[j].color){
-                    if (i === j) {
-                        temp = 2;
-                        break j;
-                    } else if (i !== j) {
-                        if (temp < 1) {
-                            temp = 1;
-                        }
+        // Initialize line-color-object for relevant colors.
+        line.forEach(ball => {
+            checked[ball.color] = 0;
+        });
+
+        // Initialize targetLine-color-object for relevant colors.
+        targetLine.forEach(tBall => {
+            tLineColor[tBall.color] = 0;
+        });
+
+        // Count colors of target line
+        targetLine.forEach(tBall => {
+            tLineColor[tBall.color]++;
+        });
+
+        // Find perfect matches first.
+        line.forEach((ball, index) => {
+            if (ball.color === targetLine[index].color) {
+                checked[ball.color]++;
+                results[index] = 2;
+            }
+        });
+
+        // check for imperfect matches.
+        line.forEach((ball, index) => {
+            targetLine.forEach(tBall => {
+                if(checked[ball.color] < tLineColor[ball.color]) {
+                    if(ball.color === tBall.color && results[index] !== 2) {
+                        checked[ball.color]++;
+                        results.push(1);
                     }
                 }
-            }
-            results.push(temp);
-        }
-        // console.log(results);
+            });
+        });
         return results;
     }
 }
@@ -176,10 +198,10 @@ function click() {
 
     game.board.forEach(line => {
         line.line.forEach(ball => {
-            if(mouseX > ball.x-radius
-                    && mouseX < ball.x+radius
-                    && mouseY > ball.y-radius
-                    && mouseY < ball.y+radius) {
+            if(mouseX > ball.x-radius*1.1
+                    && mouseX < ball.x+radius*1.1
+                    && mouseY > ball.y-radius*1.1
+                    && mouseY < ball.y+radius*1.1) {
                 if (ball.editable) {
                     if (ball.color < colors.length-1) {
                         ball.color++;

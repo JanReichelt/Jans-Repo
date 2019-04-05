@@ -3,7 +3,7 @@ body {
     margin: 0;
     background-color: green;
     position: relative;
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-family: 'Mukta', sans-serif;
 }
 
@@ -11,13 +11,13 @@ body {
     position: absolute;
     display: block;
     background-color: #00000066;
-    color: #BBBBBBFF;
+    color: #FFFFFFFF;
     border-color: #777777FF;
     border-width: 1px;
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 0.5vw;
     z-index: 1;
-    top: 550px;
+    top: 540px;
     width: 150px;
 }
 
