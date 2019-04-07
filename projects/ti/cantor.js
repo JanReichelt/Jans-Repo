@@ -7,35 +7,55 @@ const inputK = document.getElementById('inputK');
 
 let outputValue = {};
 
-function tupel() {
-    outputValue = {};
-    let k = Number(inputK.value)-1;
+function index2tupel() {
+    let tupel = [];
+    let k = (Number(inputK.value) <= 1) ? 1 : Number(inputK.value)-1; // k represents tupel length
     let inputValue = Number(input.value);
     let result = 0;
-    let tupel = [];
+    outputValue = {};
 
     cantor(inputValue);
-    tupel.push(outputValue.x);
+    tupel.unshift(outputValue.y);
     k--;
 
     for(k; k >= 0; k--) {
         if(k === 0) {
-            tupel.push(outputValue.y);
+            tupel.unshift(outputValue.x);
         } else if (k > 0) {
-            result = cantor(outputValue.y);
-            tupel.push(outputValue.x);
+            result = cantor(outputValue.x);
+            tupel.unshift(outputValue.y);
         }
         console.log(outputValue);
     }
-
     output.innerHTML = `[${tupel}]`;
 }
 
+
+function tupel2index() {
+    let inputTupel = document.getElementById('inputTupel').value;
+    let tupel = inputTupel.split(',');
+    let result = 0;
+    outputValue = {};
+
+    let x = Number(tupel.shift());
+    let y = Number(tupel.shift());
+    result = cantorValue(x, y);
+
+    while (tupel.length > 0) {
+        result = cantorValue(result, Number(tupel.shift()));
+    }
+
+    console.log(outputValue);
+    output.innerHTML = outputValue.value;
+}
+
+
 function cantor(val) {
     let result = 0;
+    let counter = Math.floor(Math.sqrt(val)*2);
 
-    for(let x = 0; x <1000000; x++) {
-        for(let y = 0; y < 1000000; y++) {
+    for(let x = 0; x < counter; x++) {
+        for(let y = 0; y < counter; y++) {
             result = cantorValue(x, y);
             if (result == val) {
                 outputValue.x = x;
@@ -50,27 +70,7 @@ function cantor(val) {
 function cantorValue(x, y) {
     outputValue.x = x;
     outputValue.y = y;
-    outputValue.value = ((x+y+1)*(x+y)/2)+x;
+    outputValue.value = ((x+y+1)*(x+y)/2)+y;
 
     return outputValue.value;
-}
-
-function fromTupel() {
-    let inputTupel = document.getElementById('inputTupel').value;
-    let tupel = inputTupel.split(',');
-    let result = 0;
-
-    let x = Number(tupel.pop());
-    let y = Number(tupel.pop());
-    result = cantorValue(x, y);
-    outputValue[`n${tupel.length}`] = result;
-
-    if (tupel.length > 0) {
-        for (let i = 0; i < tupel.length; i++) {
-            cantorValue(Number(tupel[tupel.length-i-1]), result);
-            outputValue[`n${i}`] = outputValue.value;
-        }
-    }
-    console.log(outputValue);
-    output.innerHTML = outputValue.value;
 }
