@@ -37,6 +37,7 @@ class Ball {
 }
 
 class Line{
+    // Represents the set of the balls in one row.
     constructor(y) {
         this.y = y;             // X-position of the Line in canvas.
         this.line = [];         // Collection of the four balls in this line.
@@ -49,7 +50,7 @@ class Line{
     }
 
     show() {
-        // Call the show function of each ball in the line.
+        // Calls the show function of each ball in the line.
         for (let i = 0; i < cols; i++) {
             this.line[i].show();
         }
@@ -106,6 +107,7 @@ class Line{
     }
 
     highlightLine(color) {
+        // Frame around the current active line.
         c.beginPath();
         c.strokeStyle = color;
         c.lineWidth = 5;
@@ -148,17 +150,17 @@ class Board {
 
     matchMove() {
         // Returns an array (results), which indicates the correctness of the player's move.
-        let results = []; // 0 = no match, 1 = match, 2 = perfect match
-        let line = this.board[this.move].line
+        let results = new Array(cols).fill(0); // 0 = no match, 1 = match, 2 = perfect match
+        let line = this.board[this.move].line;
         let targetLine = this.targetLine.line;
 
-        // Initialize line-color-object for relevant colors.
+        // Initialize color-object for already checked colors.
         let checked = {...colors};
         line.forEach(ball => {
             checked[ball.color] = 0;
         });
 
-        // Initialize targetLine-color-object for relevant colors.
+        // Initialize color-object for the target line.
         let tLineColor = {...colors};
         targetLine.forEach(tBall => {
             tLineColor[tBall.color] = 0;
@@ -177,22 +179,18 @@ class Board {
             }
         });
 
-        // check for imperfect matches.
+        // Find imperfect matches.
         line.forEach((ball, index) => {
             targetLine.forEach(tBall => {
                 if(checked[ball.color] < tLineColor[ball.color]) {
-                    if(ball.color === tBall.color && results[index] !== 2) {
+                    if(ball.color === tBall.color && results[index] === 0) {
                         checked[ball.color]++;
-                        results.push(1);
+                        results[index] = 1;
                         return;
                     }
                 }
             });
         });
-        console.log(checked);
-        console.log(results);
-        console.log(tLineColor);
-
         return results;
     }
 }
@@ -228,15 +226,15 @@ function startGame() {
 }
 
 function confirmMove() {
+    // Handles each confirmed move trom the player.
     game.board[game.move].toggleEditable();
     game.board[game.move].showResults(game.matchMove());
 
     let sum = game.matchMove().reduce((total, result) => total + result);
-
     // Victory!
     if (sum === 2*cols) {
         game.targetLine.show();
-        alert("Du hast gewonnen.\nProbiere es doch gleich nochmal! :)");
+        alert("Victory!\nTry it again! :)");
 
         confirmBtn.disabled = true;
         canvas.removeEventListener('click', click, false);
@@ -247,7 +245,7 @@ function confirmMove() {
     // Defeat!
     if (game.move >= game.board.length-1) {
         game.targetLine.show();
-        alert("Du hast verloren.\nProbiere es doch gleich nochmal! :)");
+        alert("Failure.\nTry it again! :)");
 
         confirmBtn.disabled = true;
         canvas.removeEventListener('click', click, false);
