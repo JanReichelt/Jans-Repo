@@ -136,7 +136,7 @@ class Board {
             ball.color = Math.floor(Math.random() * (colors.length-1))+1;
         });
         this.board.push(this.targetLine);
-        //this.targetLine.show();  // Just for easier debugging.
+        this.targetLine.show();  // Just for easier debugging.
 
         c.beginPath();
         c.moveTo(0, rows*dist);
@@ -151,15 +151,15 @@ class Board {
         let results = []; // 0 = no match, 1 = match, 2 = perfect match
         let line = this.board[this.move].line
         let targetLine = this.targetLine.line;
-        let checked = {...colors};
-        let tLineColor = {...colors};
 
         // Initialize line-color-object for relevant colors.
+        let checked = {...colors};
         line.forEach(ball => {
             checked[ball.color] = 0;
         });
 
         // Initialize targetLine-color-object for relevant colors.
+        let tLineColor = {...colors};
         targetLine.forEach(tBall => {
             tLineColor[tBall.color] = 0;
         });
@@ -184,10 +184,15 @@ class Board {
                     if(ball.color === tBall.color && results[index] !== 2) {
                         checked[ball.color]++;
                         results.push(1);
+                        return;
                     }
                 }
             });
         });
+        console.log(checked);
+        console.log(results);
+        console.log(tLineColor);
+
         return results;
     }
 }
