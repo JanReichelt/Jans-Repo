@@ -138,7 +138,7 @@ class Board {
             ball.color = Math.floor(Math.random() * (colors.length-1))+1;
         });
         this.board.push(this.targetLine);
-        this.targetLine.show();  // Just for easier debugging.
+        //this.targetLine.show();  // Just for easier debugging.
 
         c.beginPath();
         c.moveTo(0, rows*dist);
