@@ -1,0 +1,85 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #eee;
+}
+
+.box {
+    margin: auto;
+    position: relative;
+    height: 350px;
+    width: 526px;
+    background-color: #333;
+    overflow: hidden;
+}
+
+.box.cafe::after {
+    content: "...Und ein Cafe-Bild...";
+}
+
+.box.bread::after {
+    content: "Ein Bild von leckeren Käse-Croissants [Work in progress...]";
+}
+
+.box.screen::after {
+    content: "Mein Screenshot. so ungefähr sieht das auf meiner eigentlichen Seite dann aus..";
+}
+
+.box::after {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding-left: 20px; */
+    font-family: 'Bree Serif';
+    font-size: 26pt;
+    color: whitesmoke;
+    content: "";
+    position: absolute;
+    left: -526px;
+    top: 0px;
+    z-index: 1;
+    background-color: #30C6FFcc;
+    background-image: linear-gradient(120deg, #84fab0dd 0%, #8fd3f4dd 100%);
+    width: 526px;
+    height: 350px;
+    animation: uncover 1s forwards;
+}
+
+
+
+.box:hover::after, .box:focus::after {
+    animation: cover 0.8s forwards;
+}
+
+img {
+    height: 350px;
+    margin: auto;
+    top: 100px;
+}
+
+@keyframes cover {
+    0% {
+        left: -526px;
+        opacity: 0;
+    }
+    100% {
+        left: 0px;
+        opacity: 1;
+    }
+}
+
+@keyframes uncover {
+    0% {
+        left: 0px;
+        opacity: 1;
+    }
+    100% {
+        left: -526px;
+        opacity: 0;
+    }
+}
