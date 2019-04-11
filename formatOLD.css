@@ -1,0 +1,36 @@
+body {
+	background-image: "../wood_bg.jpg";
+	/* https://unsplash.com/photos/xVKEZ9wVIYM */
+}
+
+#side {
+	background-image: linear-gradient(to right, rgba(0,0,0, 0.7), rgba(0,0,0, 0.1));
+	width: 100px;
+	height: 100vh;
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.buttons {
+	padding: 8px;
+	display: block;
+	margin: 5px auto;
+	width: 80px;
+}
+
+#btn_clear {
+	position: absolute;
+	bottom: 12px;
+	width: 100px;
+}
+
+#remark {
+	position: absolute;
+	bottom: 32px;
+	font-size: 14pt;
+	font-weight: bold;
+	color: white;
+}

@@ -1,0 +1,95 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+    font-family: 'Bree Serif';
+    font-size: 1.5rem;
+    color: whitesmoke;
+}
+
+body {
+    background-color: #222;
+}
+
+.year {
+    width: 95vw;
+    margin: 2vw auto;
+    background-color: #30C6FFcc;
+    text-align: center;
+    border: 2px whitesmoke solid;
+    border-radius: 3px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2vw;
+    grid-auto-rows: minmax(100px, min-content);
+    max-width: 90vw;
+    margin: 0 auto;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.box {
+    margin: auto;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    overflow: hidden;
+    border: 2px whitesmoke solid;
+    border-radius: 2px;
+    box-shadow: 4px 6px 14px #111;
+}
+
+.box::after {
+    content: attr(data-tool-tip);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: -100%;
+    top: 0;
+    z-index: 1;
+
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background-color: #30C6FFcc;
+    /* background-image: linear-gradient(120deg, #84fab0dd 0%, #8fd3f4dd 100%); */
+
+    animation: uncover 1s forwards;
+}
+
+.box:hover::after, .box:focus::after {
+    animation: cover 0.8s forwards;
+}
+
+@keyframes cover {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    100% {
+        left: 0px;
+        opacity: 1;
+    }
+}
+
+@keyframes uncover {
+    0% {
+        left: 0px;
+        opacity: 1;
+    }
+    100% {
+        left: -100%;
+        opacity: 0;
+    }
+}
