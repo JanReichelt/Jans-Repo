@@ -21,12 +21,13 @@ class Intersection{
 
     get neighbors(){
         // Erzeugt die Nachbarn einer Intersection und übergibt sie dem neighbors-Objekt.
-        const neighbors = [];
+        let neighbors = [];
         if (this.j-1 >= 0)      {neighbors.push(game.grid[this.index(this.i, this.j-1)]);}
         if (this.i+1 < game.cols) {neighbors.push(game.grid[this.index(this.i+1, this.j)]);}
         if (this.j+1 < game.rows) {neighbors.push(game.grid[this.index(this.i, this.j+1)]);}
         if (this.i-1 >= 0)      {neighbors.push(game.grid[this.index(this.i-1, this.j)]);}
 
+        neighbors = neighbors.filter(neighbor => neighbor !== undefined);
         return neighbors;
     }
 
@@ -36,21 +37,24 @@ class Intersection{
         let wy = 0;
 
         this.neighbors.forEach(neighbor => {
+//WARUM WIRD DAS HIER SO OFT AUFGERUFEN????
             // Prüfen wo der aktuelle Nachbar liegt, damit die Linie in die richtige Richtung gezeichnet wird.
-            if (neighbor.i < this.i) {
-                wx = -(game.w/2);
-            } else if (neighbor.i > this.i) {
-                wx = (game.w/2);
-            } else {
-                wx = 0;
-            }
+            if (neighbor !== undefined) {
+                if (neighbor.i < this.i) {
+                    wx = -(game.w/2);
+                } else if (neighbor.i > this.i) {
+                    wx = (game.w/2);
+                } else {
+                    wx = 0;
+                }
 
-            if (neighbor.j < this.j) {
-                wy = -(game.w/2);
-            } else if (neighbor.j > this.j) {
-                wy = (game.w/2);
-            } else {
-                wy = 0;
+                if (neighbor.j < this.j) {
+                    wy = -(game.w/2);
+                } else if (neighbor.j > this.j) {
+                    wy = (game.w/2);
+                } else {
+                    wy = 0;
+                }
             }
 
             c.beginPath();

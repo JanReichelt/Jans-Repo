@@ -1,0 +1,24 @@
+## UI
+
+
+## Logik
+
+- game.saveMove() bezieht sich auf ein undefined, obwohl game initialisiert ist.
+-
+
+
+## Bernd
+- get liberties: statt lib = 0 und counted - ein Set counted bauen und zum Schluss counted.length zurückgeben lassen
+- Zeile 194 ff. Prüfen! Was macht das?? Was wollte ich damit erreichen?
+
+
+- Per MouseMove anzeigen, welche Gruppen man beim Tote-Gruppen_Markieren anklicken würde.
+- Zeit pro Zug etc.
+- das Klick-Event exakter gestalten
+- Kennzeichnung der markierten Gruppen vor dem Zählen exakter gestalten
+
+
+## Spielmodus patched
+- count() funktioniert noch nicht
+- gibt es einen Weg, dass ich diese ewige Prüfung auf intersection !== undefined weglassen kann?! (Ich hatte überlegt, ob ich die undefinierten Intersections aus dem grid lassen kann - aber dann kann die index()-funktion nicht mehr den Korrekten Index berechnen)
+- 

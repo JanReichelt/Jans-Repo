@@ -1,33 +1,34 @@
 class Game {
     constructor(col, row){
-        this.cols = col;        // Anzahl der Spalten, die der Spieler zu Beginn auswählt.
-        this.rows = row;        // Anzahl der Zeilen, die der Spieler zu Beginn auswählt.
-        this.w = canvas.width / this.cols; // die Breite und Höhe der Intersections, die sich aus canvas.width/cols ergibt.
-        this.lastMove = 'w';    // Zum Ermitteln des nächsten Zugs. 'w', 'b', 'passW', 'passB'.
-        this.moveNr = 0;        // Zähler der im Spiel getätigten Züge.
-        this.grid = [];         // Container für alle Intersection-Objekte auf dem Brett.
+        this.cols = col;                    // Anzahl der Spalten, die der Spieler zu Beginn auswählt.
+        this.rows = row;                    // Anzahl der Zeilen, die der Spieler zu Beginn auswählt.
+        this.w = canvas.width / this.cols;  // die Breite und Höhe der Intersections, die sich aus canvas.width/cols ergibt.
+        this.lastMove = 'w';                // Zum Ermitteln des nächsten Zugs. 'w', 'b', 'passW', 'passB'.
+        this.moveNr = 0;                    // Zähler der im Spiel getätigten Züge.
+        this.grid = new Array(this.cols*this.rows).fill(undefined);// Container für alle Intersection-Objekte auf dem Brett.
         this.moves = [];
         this.captured = {
             white: 0,
             black: 0
         };
         this.komi = komiInput.value;
-        console.log(`komi: ${this.komi}`);
 
+        // console.log(`komi: ${this.komi}`);
+        // console.log(`Game constructor mit ${this.cols} und ${this.rows} aufgerufen.`);
+        // console.log(`this.w: ${this.w}`);
+        // console.log(`canvas.width: ${canvas.width}`);
+        // console.log(`canvas.clientWidth: ${canvas.clientWidth}`);
+    }
 
-        console.log(`Game constructor mit ${this.cols} und ${this.rows} aufgerufen.`);
-        console.log(`this.w: ${this.w}`);
-        console.log(`canvas.width: ${canvas.width}`);
-        console.log(`canvas.clientWidth: ${canvas.clientWidth}`);
-
+    createGrid() {
         // Grid erstellen. grid.length ergibt sich aus der User-Eingabe cols und rows.
         for(let j = 0; j < this.rows; j++) {
             for(let i = 0; i < this.cols; i++){
-                this.grid.push(new Intersection(i, j, 'empty', this));
+                let temp = new Intersection(i, j, 'empty', this);
+                this.grid[temp.index(i, j)] = temp;
             }
         }
     }
-
 
     showBoard(moveNumber = 0) {
         // Stellt alle Intersections im grid als Spielbrett dar.
@@ -53,22 +54,24 @@ class Game {
 
         this.moveNr++;
 
-        // Erfassen der relevanten Freiheiten und fangen der Gruppen ohne Freiheiten
-        intersection.neighbors.forEach(neighbor => {
-            if (neighbor.state !== intersection.state && neighbor.state !== 'empty') {
-                if (neighbor.liberties === 0) {
-                    neighbor.take();
+        if (intersection !== undefined) {
+            // Erfassen der relevanten Freiheiten und fangen der Gruppen ohne Freiheiten
+            intersection.neighbors.forEach(neighbor => {
+                if (neighbor.state !== intersection.state && neighbor.state !== 'empty') {
+                    if (neighbor.liberties === 0) {
+                        neighbor.take();
+                    }
                 }
+            });
+
+            if (intersection.liberties === 0) {
+                this.resetMove(intersection);
             }
-        });
 
-        if (intersection.liberties === 0) {
-            this.resetMove(intersection);
+            this.saveMove();
+            console.log(intersection.group);
+            console.log(intersection.liberties);
         }
-
-        this.saveMove();
-        console.log(intersection.group);
-        console.log(intersection.liberties);
     }
 
     resetMove(intersection) {
@@ -145,7 +148,12 @@ class Game {
         if (confirm('Das Spiel wird jetzt ausgezählt.\nSicher, dass alle Gruppen richtig markiert sind?')) {
             canvas.removeEventListener('click', markDeadGroups, false);
 
-            let marked = this.grid.filter(intersection => intersection.marked);
+            let marked = this.grid.filter(intersection => {
+                if (intersection !== undefined) {
+                    intersection.marked;
+                }
+            });
+
             const points = {
                 white: 0,
                 black: 0
@@ -161,25 +169,34 @@ class Game {
                 intersection.state = 'empty'
             });
 
-            let emptyIntersections = this.grid.filter(intersection => intersection.state === 'empty');
+            let emptyIntersections = this.grid.filter(intersection => {
+                if (intersection !== undefined) {
+                    intersection.state === 'empty'
+                }
+            });
+
             while(emptyIntersections.length > 0) {
                 this.grid.forEach(intersection => {
-                    if (intersection.state !== 'empty') {
-                        intersection.neighbors.forEach(neighbor => {
-                            if (neighbor.state === 'empty') {
-                                neighbor.state = intersection.state;
-                            }
-                        });
+                    if (intersection !== undefined) {
+                        if (intersection.state !== 'empty') {
+                            intersection.neighbors.forEach(neighbor => {
+                                if (neighbor.state === 'empty') {
+                                    neighbor.state = intersection.state;
+                                }
+                            });
+                        }
                     }
                 });
                 emptyIntersections = game.grid.filter(intersection => intersection.state === 'empty');
             }
 
             this.grid.forEach(intersection => {
-                if (intersection.state === 'black'){
-                    points.black++;
-                } else if (intersection.state === 'white'){
-                    points.white++;
+                if (intersection !== undefined) {
+                    if (intersection.state === 'black'){
+                        points.black++;
+                    } else if (intersection.state === 'white'){
+                        points.white++;
+                    }
                 }
             });
 
@@ -205,6 +222,25 @@ class Game {
             winnerOutput.innerHTML = (winner === 'black') ? `S+${points.black - points.white}` : `W+${points.white - points.black}`;
             alert(`Gewonnen hat ${(winner === 'black') ? 'schwarz' : 'weiß'}.\nDer Punktestand lautet:\nWeiß: ${points.white}\nSchwarz: ${points.black}.`)
             startGamePanel.classList.remove('hidden');
+        }
+    }
+}
+
+class Game_Patched extends Game {
+    constructor(col, row) {
+        super(col, row);
+    }
+
+    createGrid() {
+        // Grid erstellen. grid.length ergibt sich aus der User-Eingabe cols und rows.
+
+        for(let j = 0; j < this.rows; j++) {
+            for(let i = 0; i < this.cols; i++){
+                if (Math.random() >= 0.10) {
+                    let temp = new Intersection(i, j, 'empty', this);
+                    this.grid[temp.index(i, j)] = temp;
+                }
+            }
         }
     }
 }

@@ -54,8 +54,10 @@ function resizeCanvasToDisplaySize() {
         if (game) {
             game.w = canvas.width / game.cols;
             game.grid.forEach(intersection => {
-                intersection.x = intersection.i * game.w;
-                intersection.y = intersection.j * game.w;
+                if (intersection !== undefined) {
+                    intersection.x = intersection.i * game.w;
+                    intersection.y = intersection.j * game.w;
+                }
                 c.clearRect(0, 0, canvas.width, canvas.height);
                 game.showBoard();
             });
@@ -81,6 +83,7 @@ const pointsWhite = document.getElementById('pointsW');
 const pointsBlack = document.getElementById('pointsB');
 const winnerOutput = document.getElementById('winner');
 const komiInput = document.getElementById('inputKomi');
+const gameMode = document.getElementById('gameModes');
 let game;
 
 
@@ -96,7 +99,12 @@ function startGame() {
             inputY = swap;
         }
         c.clearRect(0, 0, canvas.width, canvas.height);
-        game = new Game(inputX, inputY);
+        if (gameMode.value === 'patched') {
+            game = new Game_Patched(inputX, inputY);
+        } else if (gameMode.value === 'normal') {
+            game = new Game(inputX, inputY);
+        }
+        game.createGrid();
         resizeCanvasToDisplaySize();
         game.showBoard();
         console.log(game);
@@ -127,13 +135,15 @@ function mouse(event) {
 
     if (game) {
         for (let i = 0; i < game.cols*game.rows; i++) {
-            if (mouseX >= game.grid[i].x
-            && mouseX <= game.grid[i].x + game.w
-            && mouseY <= game.grid[i].y + game.w
-            && mouseY >= game.grid[i].y) {
-                if (game.grid[i].state === 'empty'){
-                    game.move(game.grid[i]);
-                    break;
+            if (game.grid[i] !== undefined) {
+                if (mouseX >= game.grid[i].x
+                && mouseX <= game.grid[i].x + game.w
+                && mouseY <= game.grid[i].y + game.w
+                && mouseY >= game.grid[i].y) {
+                    if (game.grid[i].state === 'empty'){
+                        game.move(game.grid[i]);
+                        break;
+                    }
                 }
             }
         }
@@ -147,13 +157,15 @@ function markDeadGroups(event) {
 
     if (game) {
         for (let i = 0; i < game.cols*game.rows; i++) {
-            if (mouseX >= game.grid[i].x
-            && mouseX <= game.grid[i].x + game.w
-            && mouseY <= game.grid[i].y + game.w
-            && mouseY >= game.grid[i].y) {
-                if (game.grid[i].state !== 'empty'){
-                    game.markGroups(game.grid[i]);
-                    break;
+            if (game.grid[i] !== undefined) {
+                if (mouseX >= game.grid[i].x
+                && mouseX <= game.grid[i].x + game.w
+                && mouseY <= game.grid[i].y + game.w
+                && mouseY >= game.grid[i].y) {
+                    if (game.grid[i].state !== 'empty'){
+                        game.markGroups(game.grid[i]);
+                        break;
+                    }
                 }
             }
         }
