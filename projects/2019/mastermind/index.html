@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="format.css">
-  <title>Mastermind</title>
+  <title>Mastermind | Jan Reichelt</title>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <button id="start" class="btn" onclick="startGame()">Start</button>
-  <button id="confirm" class="btn" onclick="confirmMove()" disabled>Confirm Move</button>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <button id="start" class="btn" onclick="startGame()">Start</button>
+        <button id="confirm" class="btn" onclick="confirmMove()" disabled>Confirm Move</button>
+    </div>
+
   <script src="script.js"></script>
 </body>
 </html>

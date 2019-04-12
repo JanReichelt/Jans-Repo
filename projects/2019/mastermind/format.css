@@ -7,6 +7,17 @@ body {
     font-family: 'Mukta', sans-serif;
 }
 
+#container {
+    position: absolute;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+}
+
+#canvas {
+    box-shadow: 4px 5px 12px #222;
+}
+
 .btn {
     position: absolute;
     display: block;
@@ -15,7 +26,7 @@ body {
     border-color: #777777FF;
     border-width: 1px;
     border-radius: 3px;
-    padding: 0.5vw;
+    padding: 0.4rem;
     z-index: 1;
     top: 540px;
     width: 150px;
