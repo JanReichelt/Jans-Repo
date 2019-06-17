@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE buecher SYSTEM "buecher.dtd">
+<buecher>
+    <buch>
+        <titel>Java - Der Code</titel>
+        <isbn>3-8266-1462-3</isbn>
+    </buch>
+    <buch>
+        <titel>XSLT und XPath</titel>
+        <isbn>3-8266-1532-8</isbn>
+        <autor>Marco Skulschus</autor>
+        <autor>Marcus Wiederstein</autor>
+    </buch>
+    <buch>
+        <titel>XSL-FO</titel>
+        <isbn>3-8266-1531-3</isbn>
+        <autor>Marco Skulschus</autor>
+        <autor>Marcus Wiederstein</autor>
+    </buch>
+</buecher>

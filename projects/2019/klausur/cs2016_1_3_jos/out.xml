@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_161" class="java.beans.XMLDecoder">
+ <object class="cs2016_1_3_jos.Mitarbeiter">
+  <void property="adresse">
+   <object class="cs2016_1_3_jos.Adresse" id="Adresse0">
+    <void property="ort">
+     <string>Dresden</string>
+    </void>
+    <void property="plz">
+     <string>01326</string>
+    </void>
+    <void property="strasze">
+     <string>Maxstraße</string>
+    </void>
+   </object>
+  </void>
+  <void property="geburtstag">
+   <object class="java.util.Date">
+    <long>1557225179425</long>
+   </object>
+  </void>
+  <void property="id">
+   <int>1</int>
+  </void>
+  <void property="kontakte">
+   <object class="java.util.ArrayList" id="ArrayList0">
+    <void method="add">
+     <object class="cs2016_1_3_jos.Telefon">
+      <void property="telefonnummer">
+       <string>987960786</string>
+      </void>
+      <void property="timestamp">
+       <object class="java.util.Date">
+        <long>1557225179422</long>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="cs2016_1_3_jos.Mail">
+      <void property="mailAdresse">
+       <string>kbwf@jh.de</string>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+  <void property="name">
+   <string>Fred</string>
+  </void>
+ </object>
+ <object class="cs2016_1_3_jos.Mitarbeiter">
+  <void property="adresse">
+   <object idref="Adresse0"/>
+  </void>
+  <void property="geburtstag">
+   <object class="java.util.Date">
+    <long>1557225179425</long>
+   </object>
+  </void>
+  <void property="id">
+   <int>2</int>
+  </void>
+  <void property="kontakte">
+   <object idref="ArrayList0"/>
+  </void>
+  <void property="name">
+   <string>Max</string>
+  </void>
+ </object>
+</java>

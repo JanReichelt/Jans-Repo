@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<addressbook>
+    <address id="0">
+    	<firstname>Hans</firstname>
+    	<lastname>Im Glück</lastname>
+    	<street>Feldweg 1</street>
+    	<country>Märchenland</country>
+    </address>
+    <address id="1">
+    	<firstname>Max</firstname>
+    	<lastname>Tunichtgut</lastname>
+    	<street>Waldstraße 13</street>
+    	<country>Traumland</country>
+    </address>
+    <address id="2">
+    	<firstname>Ruth</firstname>
+    	<lastname>Käppchen</lastname>
+    	<street>Wolfspfad 3</street>
+    	<country>Märchenland</country>
+    </address>
+    <address id="3">
+    	<firstname>Rapunzel</firstname>
+    	<lastname>Langhaar</lastname>
+    	<street>Turm 0</street>
+    	<country>Märchenland</country>
+    </address>
+    <address id="4">
+    	<firstname>Rudi</firstname>
+    	<lastname>Ratlos</lastname>
+    	<street>Wolkenweg 100</street>
+    	<country>Chaosland</country>
+    </address>
+    <address id="5">
+    	<firstname>Marie</firstname>
+    	<lastname>Gold</lastname>
+    	<street>Wolkenweg 100</street>
+    	<country>Märchenland</country>
+    </address>
+</addressbook>
