@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Kavoon');
+*{
+  box-sizing:border-box;
+}
+
+html, body{
+  background: #333838;
+  width:100%;
+  margin:2px;
+  overflow:hidden;
+  cursor:move;
+}
+
+canvas{
+  -webkit-filter: url("#gooeyCottonCandy");
+  filter: url("#gooeyCottonCandy");
+}
