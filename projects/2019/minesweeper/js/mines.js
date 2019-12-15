@@ -1,12 +1,23 @@
+//// THX PAUL! THX BERND!
+
+
+/// Get Resources
+const minePic = new Image();
+minePic.src = 'mine.png';
+const clockUI = document.getElementById('clock');
+let clockCount;
+
 /// Set Canvas
 let canvas = document.getElementById('board');
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = 700;
+canvas.height = 700;
 
 let c = canvas.getContext('2d');
 c.fillStyle = "#eee";
 c.fillRect(0, 0, canvas.width, canvas.height);
-
+c.strokeStyle = 'teal';
+c.rect(2, 2, canvas.width-4, canvas.height-4);
+c.stroke();
 
 /// Click Handler
 function clickHandler(event) {
@@ -21,28 +32,44 @@ function clickHandler(event) {
             && mouseY <= g.grid[i].y + g.w
             && mouseY >= g.grid[i].y) {
                 if (g.grid[i].hidden == true){
-                    if (g.moveNr == 0) {
-                        g.setMines(i, g.mineNr);
-                        g.showGrid();
+                    if (event.altKey == true) {
+                        if (g.grid[i].flag == false) {
+                            g.grid[i].flag = true;
+                        } else {
+                            g.grid[i].flag = false;
+                        }
+                        g.grid[i].show();
+                    } else {
+                        if (g.moveNr == 0) {
+                            g.setMines(i, g.mineNr);
+                            g.showGrid();
+                            clockCount = setInterval(() => {
+                                g.clock += 1;
+                                console.log(g.clock);
+                                clockUI.innerHTML = g.clock;
+                                if (g.clock % 10 == 0 && g.clock > 1) g.addMine();
+                            }, 1000);
+                        }
+                        g.grid[i].unveil();
+                        g.moveNr++;
+                        g.checkWin();
                     }
-                    g.grid[i].unveil();
                 }
             }
         }
-        g.moveNr++;
-        g.checkWin();
     }
 }
 
-
+/// Classes
 class Game {
     constructor(col, row, mineNr){
         this.mineNr = mineNr;
-        this.cols = col;                    // Anzahl der Spalten, die der Spieler zu Beginn auswählt.
-        this.rows = row;                    // Anzahl der Zeilen, die der Spieler zu Beginn auswählt.
-        this.w = canvas.width / this.cols;  // die Breite und Höhe der Felder.
-        this.moveNr = 0;                    // Zähler der im Spiel getätigten Züge.
+        this.cols = col;                            // Anzahl der Spalten, die der Spieler zu Beginn auswählt.
+        this.rows = row;                            // Anzahl der Zeilen, die der Spieler zu Beginn auswählt.
+        this.w = (canvas.width - 4) / this.cols;    // die Breite und Höhe der Felder.
+        this.moveNr = 0;                            // Zähler der im Spiel getätigten Züge.
         this.grid = new Array(this.cols*this.rows).fill(undefined);// Container für alle Field-Objekte auf dem Brett.
+        this.clock = 0;
     }
 
     setGrid() {
@@ -64,7 +91,24 @@ class Game {
         let i = 0;
         while(i < nr) {
             item = this.grid[Math.floor(Math.random()*this.grid.length)];
-            if ((item.i*g.cols+item.j) !== index && item.state !== 'mine') {
+            if ((item.i*g.cols+item.j) !== index &&
+                (item.i*g.cols+item.j) !== index - 1 &&
+                (item.i*g.cols+item.j) !== index + 1 &&
+                (item.i*g.cols+item.j) !== index + g.cols &&
+                (item.i*g.cols+item.j) !== index - g.cols &&
+                 item.state !== 'mine') {
+             //Das unten ist der Versuch dafür zu sorgen, dass man beim ersten Klick nie auf einer Zahl landet
+            // console.log(index);
+            // console.log(`index+1 = ${index+1}`);
+            // console.log(`index-1 = ${index+1}`);
+            // console.log(`index+1+cols = ${index+1+g.cols}`);
+            // if ((item.i*g.cols+item.j) < index - 1 || (item.i*g.cols+item.j) > index + 1 &&
+            //     (item.i*g.cols+item.j) < index + g.cols - 1 || (item.i*g.cols+item.j) > index + g.cols + 1 &&
+            //     (item.i*g.cols+item.j) < index - g.cols - 1 || (item.i*g.cols+item.j) > index - g.cols + 1 &&
+            //      item.state !== 'mine') {
+            //          console.log("met conditions");
+            //          console.log(item);
+            //          console.log(`index+1+cols = ${index+g.cols} -- index-cols = ${index-g.cols}`);
                 item.state = 'mine';
                 i++;
             }
@@ -75,10 +119,31 @@ class Game {
         }
     }
 
+    addMine() {
+        let hiddenFields = this.grid.filter((item) => {
+            return (item.hidden == true && item.state !== 'mine');
+        });
+        console.log(hiddenFields);
+        if (hiddenFields.length > 0) {
+            hiddenFields[Math.floor(Math.random()*hiddenFields.length)].state = 'mine';
+            this.grid.forEach((i) => i.setState());
+            this.showGrid();
+        } else {
+            let msg = alert('GEWONNEN!! Nochmal versuchen?');
+            canvas.removeEventListener('click', clickHandler, false);
+            clearInterval(clockCount);
+            this.restart();
+        }
+    }
+
     restart() {
-        console.log("restart!!!");
+        console.log("restart!!");
         this.setGrid();
         this.moveNr = 0;
+        this.clock = 0;
+        clearInterval(clockCount);
+        clockUI.innerHTML = this.clock;
+        canvas.addEventListener('click', clickHandler, false);
     }
 
     index(i, j) {
@@ -100,6 +165,8 @@ class Game {
 
         if (count == target) {
             let msg = alert('GEWONNEN!! Nochmal versuchen?');
+            canvas.removeEventListener('click', clickHandler, false);
+            clearInterval(clockCount);
             return true;
         }
     }
@@ -113,38 +180,53 @@ class Field {
         this.x = this.j * this.w;
         this.y = this.i * this.w;
         this.hidden = true;
-        this.state = 'empty'// [mine, empty, minecount]
+        this.flag = false;
+        this.state = 'empty'    // [mine, empty, minecount]
     }
 
     show() {
-        c.beginPath();
-        c.rect(this.x, this.y, this.w, this.w);
-        c.lineWidth = 1;
+        c.lineWidth = 2;
         c.strokeStyle = 'teal';
-        c.stroke();
-
-        c.rect(this.x, this.y, this.w, this.w);
         c.fillStyle = '#eee';
+        c.beginPath();
+        c.rect(this.x+3, this.y+3, this.w-2, this.w-2);
+        c.stroke();
         c.fill();
 
         if (this.hidden == false) {
-            c.rect(this.x, this.y, this.w, this.w);
+            c.rect(this.x+2, this.y+2, this.w-2, this.w-2);
             c.fillStyle = 'teal';
             c.fill();
+            c.stroke();
 
             c.fillStyle = 'white';
             c.font = `${g.w*0.8}px Arial`;
-            c.fillText(`${this.state}`, (this.x+this.w*3/10), (this.y+this.w*8/10));
+            if (this.state !== 'mine' && this.state !== 'empty') {
+                c.fillText(`${this.state}`, (this.x+this.w*3/10), (this.y+this.w*8/10));
+            }
 
             if (this.state == 'mine') {
-                c.rect(this.x, this.y, this.w, this.w);
+                c.rect(this.x+2, this.y+2, this.w-2, this.w-2);
                 c.fillStyle = 'red';
                 c.fill();
+                c.drawImage(minePic, this.x+2+g.w*0.1, this.y+2+g.w*0.1, g.w-(g.w*0.2), g.w-(g.w*0.2));
+                console.log("drew image");
             } else if (this.state == 0) {
-                c.rect(this.x, this.y, this.w, this.w);
+                c.rect(this.x+2, this.y+2, this.w-2, this.w-2);
                 c.fillStyle = 'teal';
                 c.fill();
             }
+        } else if (this.hidden == true && this.flag == true) {
+            c.beginPath();
+            c.strokeStyle = 'teal';
+            c.fillStyle = 'orange';
+            c.lineWidth = 2;
+            c.moveTo(this.x+g.w/8*3, this.y+g.w/8*7);
+            c.lineTo(this.x+g.w/8*3, this.y+g.w/8*2);
+            c.lineTo(this.x+g.w/8*6, this.y+g.w/8*3.5);
+            c.lineTo(this.x+g.w/8*3, this.y+g.w/8*5);
+            c.fill();
+            c.stroke();
         }
     }
 
@@ -176,11 +258,13 @@ class Field {
                 this.show();
             }
             let msg = alert('VERLOREN!! Nochmal versuchen?');
+            canvas.removeEventListener('click', clickHandler, false);
             for(let i = 0; i < g.grid.length; i++) {
                 if (g.grid[i].state == 'mine') {
                     g.grid[i].hidden = false;
                 }
             }
+            clearInterval(clockCount);
             g.showGrid();
         }
     }
@@ -210,7 +294,6 @@ class Field {
     }
 }
 
-/// Run board
-
-let g = new Game(15, 15, 20);
+/// Get it running
+let g = new Game(15, 15, 35);
 g.setGrid();
