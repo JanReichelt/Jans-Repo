@@ -1,4 +1,6 @@
 // Thanks to Coding Train: https://thecodingtrain.com/CodingChallenges/145-2d-ray-casting.html
+// Also useful: https://ncase.me/sight-and-light/
+// Also useful: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 
 let walls = [];
 let cornerPoints = [];
