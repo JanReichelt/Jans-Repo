@@ -1,0 +1,33 @@
+{
+  "name": "world_empire_app",
+  "version": "1.0.0",
+  "description": "World Empire is a strategic game where all players aim to rule the whole world by invading and developing countries. Starting with npm run dev",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "world",
+    "empire",
+    "game",
+    "strategy"
+  ],
+  "author": [
+    "Kristian Möller",
+    "Jan Reichelt"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "node-fetch": "^2.6.0",
+    "pg": "^7.17.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
