@@ -40,4 +40,8 @@ class Ray {
         }
         else return;
     }
+
+    setDir(angle) {
+        this.dir.rotate(angle);
+    }
 }
