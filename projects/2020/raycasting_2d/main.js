@@ -4,17 +4,32 @@
 
 /*
 TODO:
-- Winkelberechnung zwischen ray und wall einfügen: https://www.youtube.com/watch?v=qaoRO95hH4c
-- cos alpha = a*b (Skalarprodukt)/ |a| * |b|
 - Sobald Winkelberechnet wurde für spiegelnde Oberflächen Ausfallwinkel berechnen (180-alpha)
 - Absorptionsgrad für Wände einfügen (vll. kann das sogar generelle Eigenschaft der Wand sein - entgegengesetzt zu Spiegelgrad, sodass nicht mehr unbedingt verschiedene Wandtypen entwickelt werden müssen, sondern nur noch unterschiedliche Ausprägungen von Spiegeln/Absorption nötig sind)
 - Rendering: gespiegelte Rays bekommen keinen Endpunkt, sondern erst, wenn sie auf eine Wand treffen, die den Großteil des Rays absorbiert
 - Rendering 2: Absorption nutzen, um zu Ermessen, wie viel alpha der reflektierte Strahl hat (und, ob noch eine Reflektion nötig ist - Grenzwert)
+
+Warum die reflektierten Strahlen nicht immer angezeigt werden, bzw. an Flächen hinter der eigentlichen Wand reflektieren:
+- Das Problem ist, dass zu viele Funktionsaufrufe in ray.cast(wall) ohne eigentlichen Punkt returnieren,
+  die Folge ist, dass kein Punkt gegeben ist, von dem der Ray ausgehen kann. Da das tempRays-Array
+  regelmäßig geleert werden muss, ergeben sich daraus blinkende sekundäre Strahlen
+- Je nahdem, wie viele Strahlen reflektiert werden sollen, ergibt sich schnell eine Zahl von über
+  tausenden ohne Punkt returnierten ray.cast(wall)-Aufrufen. Unter welchen Bedingungen scheitert die Formel
+  und wie kann ich das verbessern? Wenn verlässliche Ergebnisse da sind, kann ich auch verlässlich
+  Strahlen reflektieren.
 */
 
+
+/*
+    Aktuelle Fragen:
+    - Warum habe ich als closest point direkt nach Programmstart x: NaN; y: NaN?
+    - Warum habe ich immer einen Strahl weniger in den Reflektionen als in den unabhängigen Strahlen?
+    - Warum kann ich alle Reflektionen ohne Probleme zeichnen, wenn ich eine beliebige Länge angebe, aber nur einen Bruchteil davon, wenn ich dort auch den nächsten Schnittpunkt berechnen möchte?
+    
+*/
 let walls = [];
 let cornerPoints = [];
-let particle;
+let source;
 
 let update;
 let constructionMode;
@@ -23,18 +38,16 @@ let activePoint;
 
 let primaryColor;
 let backgroundColor;
-let laserColor;
 let activeColor;
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth-20, windowHeight-20);
 
     activeColor = color(100, 255, 100);
     backgroundColor = color (0, 0, 0);
     constructionMode = false;
     update = true;
 
-    particle = new Particle();
     for (let i = 0; i < 5; i++) {
         let x1 = random(width);
         let x2 = random(width);
@@ -46,22 +59,22 @@ function setup() {
     walls.push(new Wall(width, 0, width, height));
     walls.push(new Wall(width, height, 0, height));
     walls.push(new Wall(0, height, 0, 0));
+    source = new Source();
 }
 
 
 function draw() {
-
-
     if (keyIsPressed) controls('keyDown');
 
+    // Nur Szene neu berechnen, wenn Bool update == true (Ressourcen sparen)
     if (update) {
         update = !update;
         background(backgroundColor);
 
+        // constuction Mode und Hilfstexte
         if (constructionMode) {
             backgroundColor = color(255, 255, 255);
             primaryColor = color(0, 0, 0);
-            laserColor   = color(255, 100, 100, 40);
 
             if (addedPoint) drawAddedPoint();
             if (activePoint) drawActivePoint();
@@ -69,26 +82,24 @@ function draw() {
             noStroke();
             textSize(10);
             fill(primaryColor);
-            text('LEFT-CLICK: Add or activate Point.\n2nd LEFT-CLICK: Add wall. \nBACKSPACE: delete wall with activated point.', 50, 50, 200, 70);
+            text('LEFT-CLICK: Add or activate Point.\n2nd LEFT-CLICK: Add wall.\nBACKSPACE: delete wall with activated point.', 50, 50, 200, 70);
         } else {
             backgroundColor = color(0, 0 ,0);
             primaryColor = color(255, 255, 255);
-            laserColor   = color(100, 100, 255, 100);
 
             noStroke();
             textSize(10);
             fill(primaryColor);
-            text('ANY KEY:  get into "Construction Mode". \nUP/DOWN-Arrow:  change your field of view. \nLEFT/RIGHT-Arrow:  rotate your view.', 50, 50, 250, 70);
+            text('ANY KEY:  get into "Construction Mode".\nUP/DOWN-Arrow:  change your field of view.\nLEFT/RIGHT-Arrow:  rotate your view.', 50, 50, 250, 70);
         }
 
-        for (let wall of walls) {
-            wall.draw();
-        }
-        particle.look(walls);
-        particle.draw()
+        // Walls und Rays
+        walls.forEach(wall => wall.draw());
+        source.draw()
     }
 }
 
+// Darstellung Hilfspunkte im constructionMode
 function drawAddedPoint() {
     fill(primaryColor);
     ellipse(addedPoint.x, addedPoint.y, 10);
@@ -101,6 +112,7 @@ function drawActivePoint() {
     ellipse(activePoint.x, activePoint.y, 15);
 }
 
+// Suche aller Wall-Eckpunkte
 function getCornerPoints() {
     cornerPoints.splice(0, cornerPoints.length); // es ginge vermutlich auch points=[]
 
@@ -109,6 +121,7 @@ function getCornerPoints() {
     });
 }
 
+// Löschen der Wall mit aktiviertem Punkt
 function deletePoint() {
     if (activePoint) {
         let index;
@@ -123,7 +136,7 @@ function deletePoint() {
     }
 }
 
-
+// EventHandler
 function controls(mode) {
     if (mode === 'keyPress') {
         if (keyCode !== LEFT_ARROW &&
@@ -141,7 +154,17 @@ function controls(mode) {
                     constructionMode = !constructionMode;
                 }
             } else {
-                constructionMode = !constructionMode;
+                if (keyCode === 68) {
+                    console.log("Ausgabe reflektierte Strahlen");
+                    let arr = [];
+                    source.rays[1].forEach(ray => {
+                        let r = new Ray(ray.pos, ray.angle, ray.deg, ray.origin);
+                        arr.push(r);
+                    });
+                    console.log(arr);
+                } else {
+                    constructionMode = !constructionMode;
+                }
             }
         }
         return false;
@@ -177,10 +200,10 @@ function controls(mode) {
         }
     } else if (mode === 'mouseClick') {
     } else if (mode === 'keyDown') {
-        if (keyCode === LEFT_ARROW) particle.turn('left');
-        else if (keyCode === RIGHT_ARROW) particle.turn('right');
-        if (keyCode === UP_ARROW) particle.changeFieldOfView('up');
-        else if (keyCode === DOWN_ARROW) particle.changeFieldOfView('down');
+        if      (keyCode === LEFT_ARROW)  source.turn('left');
+        else if (keyCode === RIGHT_ARROW) source.turn('right');
+        if      (keyCode === UP_ARROW)    source.changeFieldOfView('up');
+        else if (keyCode === DOWN_ARROW)  source.changeFieldOfView('down');
     }
     update = true;
 }

@@ -6,7 +6,7 @@
  * edge detection: https://www.youtube.com/watch?v=uihBwtPIBxM
  */
 
-let img, res;
+let img, res, info;
 let filters;
 let origImg;
 
@@ -40,12 +40,23 @@ function preload() {
             [-1, -1, -1],
             [-1,  8, -1],
             [-1, -1, -1]
+        ],
+        sobelX: [
+            [-1,  0,  1],
+            [-2,  0,  2],
+            [-1,  0,  1]
+        ],
+        sobelY: [
+            [-1, -2, -1],
+            [ 0,  0,  0],
+            [ 1,  2,  1]
         ]
     }
 }
 
 function setup() {
     let cnv = createCanvas(275, 150);
+    info = 'applied filter: None'
     cnv.position(50, 50);
     background(220);
 
@@ -86,6 +97,16 @@ function setup() {
         .size(50, 25)
         .mousePressed(buttonHandler);
 
+    let BTN_bw = createButton('b/w')
+        .position(390, 50)
+        .size(50, 25)
+        .mousePressed(buttonHandler);
+
+    let BTN_sepia = createButton('sepia')
+        .position(390, 80)
+        .size(50, 25)
+        .mousePressed(buttonHandler);
+
     // File input
     let input = createFileInput(handleFile);
     input.position(50, 205);
@@ -93,14 +114,26 @@ function setup() {
 
 
 function draw() {
+    background(220);
     // Bilder darstellen
     image(img, 25, 25, 100, 100);
     image(res, 150, 25);
+    textSize(8);
+    text(info, 150, 135);
 }
 
 
 function buttonHandler() {
-    applyFilter(origImg, filters[this.elt.innerText]);
+    if (this.elt.innerText === 'b/w') {
+        applyBW(origImg, false);
+    } else if (this.elt.innerText === 'sepia') {
+        applyBW(origImg, true);
+    } else if (this.elt.innerText === 'edge') {
+        applyEdgeFilter(origImg);
+    } else {
+        applyFilter(origImg, filters[this.elt.innerText]);
+    }
+    info = `applied filter: ${this.elt.innerText}`;
 }
 
 
@@ -163,6 +196,64 @@ function applyFilter(imgMatrix, filterMatrix) {
     for (let y = 0; y < res.height-2; y++) {
         for (let x = 0; x < res.width-2; x++) {
             // res.set(x, y, color(result[y][x])); // blur: black and white
+            res.set(x, y, color(result[y][x][0], result[y][x][1], result[y][x][2], result[y][x][3])); // blur: box blur
+        }
+    }
+
+    res.updatePixels();
+    return result;
+}
+
+function applyBW(imgMatrix, sepia) {
+    let result = [];
+    imgMatrix.forEach(line => {
+        let newLine = [];
+        line.forEach(pix => {
+            if (sepia) {
+                let outputRed = (pix[0] * .393) + (pix[1] *.769) + (pix[2] * .189);
+                let outputGreen = (pix[0] * .349) + (pix[1] *.686) + (pix[2] * .168);
+                let outputBlue = (pix[0] * .272) + (pix[1] *.534) + (pix[2] * .131);
+                newLine.push([outputRed, outputGreen, outputBlue, pix[3]]);
+            } else {
+                let average = (pix[0] + pix[1] + pix[2]) / 3;
+                newLine.push([average, average, average, pix[3]]);
+            }
+        });
+        result.push(newLine);
+    });
+
+    for (let y = 0; y < res.height-2; y++) {
+        for (let x = 0; x < res.width-2; x++) {
+            res.set(x, y, color(result[y][x][0], result[y][x][1], result[y][x][2], result[y][x][3])); // blur: box blur
+        }
+    }
+
+    res.updatePixels();
+    return result;
+}
+
+function applyEdgeFilter(imgMatrix) {
+    // A combination of the bw-filter and the sobel filters in x and y direction
+    let bwMatrix = applyBW(imgMatrix);
+    let resultX = applyFilter(bwMatrix, filters['sobelX']);
+    let resultY = applyFilter(bwMatrix, filters['sobelY']);
+
+    let result = [];
+
+    for (let i = 0; i < bwMatrix.length-2; i++) {
+        let newLine = [];
+        for (let j = 0; j < bwMatrix[0].length-2; j++) {
+            let r = Math.sqrt(Math.pow(resultX[i][j][0], 2) + Math.pow(resultY[i][j][0], 2));
+            let g = Math.sqrt(Math.pow(resultX[i][j][1], 2) + Math.pow(resultY[i][j][1], 2));
+            let b = Math.sqrt(Math.pow(resultX[i][j][2], 2) + Math.pow(resultY[i][j][2], 2));
+            let a = 255;
+            newLine.push([r, g, b, a]);
+        }
+        result.push(newLine);
+    }
+
+    for (let y = 0; y < res.height-2; y++) {
+        for (let x = 0; x < res.width-2; x++) {
             res.set(x, y, color(result[y][x][0], result[y][x][1], result[y][x][2], result[y][x][3])); // blur: box blur
         }
     }
