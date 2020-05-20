@@ -9,10 +9,13 @@
 let img, res, info;
 let filters;
 let origImg;
+let imgSize;
 
 function preload() {
-    img = loadImage('flower_100.jpeg');
-    res = createImage(100,100);
+    img = loadImage('flower_300.png');
+    imgSize = 400;
+
+    res = createImage(imgSize, imgSize);
     pixelDensity(1);
 
     filters = {
@@ -55,84 +58,91 @@ function preload() {
 }
 
 function setup() {
-    let cnv = createCanvas(275, 150);
+    let cnv = createCanvas(2*imgSize+75, imgSize+50);
     info = 'applied filter: None'
     cnv.position(50, 50);
     background(220);
 
     // Pixel aus Bildern extrahieren und bearbeitbar machen
+    img.resize(imgSize, imgSize);
     img.loadPixels();
     res.loadPixels();
 
     // Bildformat anpassen
-    origImg = getImgValueMatrix(100, 100, img.pixels);
+    origImg = getImgValueMatrix(imgSize, imgSize, img.pixels);
 
     // Überschrift
     let heading = createP("Basic selfmade Image Filtering");
     heading.position(50, 15);
 
     // Knöpfe einfügen
+    let btnX = 2*imgSize + 125 + 10;
+    let btnY = 50;
+    let btnH = 25;
+    let btnW = 50;
     let BTN_blur = createButton('blur')
-        .position(330, 50)
-        .size(50, 25)
+        .position(btnX, btnY)
+        .size(btnW, btnH)
         .mousePressed(buttonHandler);
 
     let BTN_gauß = createButton('gauß')
-        .position(330, 80)
-        .size(50, 25)
+        .position(btnX, btnY + (btnH + 5))
+        .size(btnW, btnH)
         .mousePressed(buttonHandler);
 
     let BTN_sharp = createButton('sharp')
-        .position(330, 110)
-        .size(50, 25)
+        .position(btnX, btnY + 2*(btnH + 5))
+        .size(btnW, btnH)
         .mousePressed(buttonHandler);
 
     let BTN_sponge = createButton('sponge')
-        .position(330, 140)
-        .size(50, 25)
-        .mousePressed(buttonHandler);
-
-    let BTN_edge = createButton('edge')
-        .position(330, 170)
-        .size(50, 25)
+        .position(btnX, btnY + 3*(btnH + 5))
+        .size(btnW, btnH)
         .mousePressed(buttonHandler);
 
     let BTN_bw = createButton('b/w')
-        .position(390, 50)
-        .size(50, 25)
+        .position(btnX, btnY + 4*(btnH + 5))
+        .size(btnW, btnH)
         .mousePressed(buttonHandler);
 
     let BTN_sepia = createButton('sepia')
-        .position(390, 80)
-        .size(50, 25)
+        .position(btnX, btnY + 5*(btnH + 5))
+        .size(btnW, btnH)
+        .mousePressed(buttonHandler);
+
+    let BTN_edge = createButton('edge')
+        .position(btnX, btnY + 6*(btnH + 5))
+        .size(btnW, btnH)
         .mousePressed(buttonHandler);
 
     // File input
     let input = createFileInput(handleFile);
-    input.position(50, 205);
+    input.position(50, 110+imgSize);
 }
 
 
 function draw() {
     background(220);
     // Bilder darstellen
-    image(img, 25, 25, 100, 100);
-    image(res, 150, 25);
-    textSize(8);
-    text(info, 150, 135);
+    image(img, 25, 25, imgSize, imgSize);
+    image(res, imgSize+50, 25, imgSize, imgSize);
+    textSize(10);
+    text(info, imgSize+50, imgSize+35);
 }
 
 
 function buttonHandler() {
+    let m;
     if (this.elt.innerText === 'b/w') {
-        applyBW(origImg, false);
+        m = applyBW(origImg, false);
     } else if (this.elt.innerText === 'sepia') {
-        applyBW(origImg, true);
+        m = applyBW(origImg, true);
     } else if (this.elt.innerText === 'edge') {
-        applyEdgeFilter(origImg);
+        m = applyEdgeFilter(origImg);
     } else {
-        applyFilter(origImg, filters[this.elt.innerText]);
+        m = applyFilter(origImg, filters[this.elt.innerText]);
     }
+    show(m);
     info = `applied filter: ${this.elt.innerText}`;
 }
 
@@ -140,9 +150,9 @@ function buttonHandler() {
 function handleFile(file) {
     if (file.type === "image") {
         img = loadImage(file.data, image => {
-            image.resize(100, 100);
+            image.resize(imgSize, imgSize);
             image.loadPixels();
-            origImg = getImgValueMatrix(100, 100, image.pixels);
+            origImg = getImgValueMatrix(imgSize, imgSize, image.pixels);
         });
     }
 }
@@ -192,15 +202,6 @@ function applyFilter(imgMatrix, filterMatrix) {
         }
         result.push(line);
     }
-
-    for (let y = 0; y < res.height-2; y++) {
-        for (let x = 0; x < res.width-2; x++) {
-            // res.set(x, y, color(result[y][x])); // blur: black and white
-            res.set(x, y, color(result[y][x][0], result[y][x][1], result[y][x][2], result[y][x][3])); // blur: box blur
-        }
-    }
-
-    res.updatePixels();
     return result;
 }
 
@@ -221,14 +222,6 @@ function applyBW(imgMatrix, sepia) {
         });
         result.push(newLine);
     });
-
-    for (let y = 0; y < res.height-2; y++) {
-        for (let x = 0; x < res.width-2; x++) {
-            res.set(x, y, color(result[y][x][0], result[y][x][1], result[y][x][2], result[y][x][3])); // blur: box blur
-        }
-    }
-
-    res.updatePixels();
     return result;
 }
 
@@ -251,15 +244,16 @@ function applyEdgeFilter(imgMatrix) {
         }
         result.push(newLine);
     }
+    return result;
+}
 
+function show(imgMatrix) {
     for (let y = 0; y < res.height-2; y++) {
         for (let x = 0; x < res.width-2; x++) {
-            res.set(x, y, color(result[y][x][0], result[y][x][1], result[y][x][2], result[y][x][3])); // blur: box blur
+            res.set(x, y, color(imgMatrix[y][x][0], imgMatrix[y][x][1], imgMatrix[y][x][2], imgMatrix[y][x][3]));
         }
     }
-
     res.updatePixels();
-    return result;
 }
 
 function multMatrix(a, b) {
