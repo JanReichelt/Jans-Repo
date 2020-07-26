@@ -25,7 +25,7 @@ Warum die reflektierten Strahlen nicht immer angezeigt werden, bzw. an Flächen 
     - Warum habe ich als closest point direkt nach Programmstart x: NaN; y: NaN?
     - Warum habe ich immer einen Strahl weniger in den Reflektionen als in den unabhängigen Strahlen?
     - Warum kann ich alle Reflektionen ohne Probleme zeichnen, wenn ich eine beliebige Länge angebe, aber nur einen Bruchteil davon, wenn ich dort auch den nächsten Schnittpunkt berechnen möchte?
-    
+
 */
 let walls = [];
 let cornerPoints = [];

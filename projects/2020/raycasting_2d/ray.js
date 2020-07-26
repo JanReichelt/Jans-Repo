@@ -29,9 +29,9 @@ class Ray {
             ellipse(this.closest.x, this.closest.y, 6);
         }
 
-        stroke(color(220,180,0,150));
-        fill(color(220,180,0,150));
-        line(this.pos.x, this.pos.y, this.pos.x+5000*this.dir.x, this.pos.y+5000*this.dir.y);
+        // stroke(color(220,180,0,150));
+        // fill(color(220,180,0,150));
+        // line(this.pos.x, this.pos.y, this.pos.x+5000*this.dir.x, this.pos.y+5000*this.dir.y);
 
     }
 
@@ -86,7 +86,7 @@ class Ray {
                 }
             }
         });
-        console.log(`intersection point: x: ${this.closest.x}; y: ${this.closest.y}`);
+        // console.log(`intersection point: x: ${this.closest.x}; y: ${this.closest.y}`);
         return this.closest;
     }
 

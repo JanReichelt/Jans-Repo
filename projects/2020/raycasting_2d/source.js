@@ -2,7 +2,7 @@ class Source {
     constructor() {
         this.pos = createVector(width/2, height/2);
         this.dir = createVector(1, 0);
-        this.highestDeg = 3;    // Wie oft soll jeder Ray maximal reflektiert werden?
+        this.highestDeg = 1;    // Wie oft soll jeder Ray maximal reflektiert werden?
         this.rays = {}
         for (let i = 0; i < this.highestDeg; i++) {
             this.rays[i] = [];
@@ -13,10 +13,10 @@ class Source {
             let r = new Ray(this.pos, radians(a));
             this.rays[0].push(r);
 
-            // Sekundäre Strahlen hinzufügen
-            for (let i = 1; i < this.highestDeg; i++) {
-                // r = r.addReflection(this.rays[i]);
-            }
+            // // Sekundäre Strahlen hinzufügen
+            // for (let i = 1; i < this.highestDeg; i++) {
+            //     r = r.addReflection(this.rays[i]);
+            // }
         }
     }
 
@@ -28,12 +28,10 @@ class Source {
         // Update Position
         this.update(mouseX, mouseY);
 
-        // Das war ehemals die look()-Methode
-        console.log("---DRAW---");
+        //Das war ehemals die look()-Methode
         for (let i = 0; i < this.highestDeg; i++) {
             if (this.rays[i].length > 0) {
                 this.rays[i].forEach((ray) => {
-                    // console.log("in draw", ray);
                     ray.getClosest();
                     ray.draw();
                 });
@@ -64,7 +62,7 @@ class Source {
             if (this.rays[0].length < 360) {
                 let r = new Ray(this.pos, radians(this.rays[0].length-angle));
                 this.rays[0].push(r);
-                r.addReflection(this.rays[r.deg+1]);
+                // r.addReflection(this.rays[r.deg+1]);
             }
         } else if (direction === 'down') {
             if (this.rays[0].length > 1) {
