@@ -31,7 +31,9 @@ function setup() {
 }
 
 function draw() {
-    background('rgba(51,51,51, 0.2)');
+    // background('rgba(51,51,51, 0.2)');
+    stroke('black');
+    fill('black');
 
     for (let i = 0; i < (width/w); i++) {
         for (let j = 0; j < (height/w); j++) {
@@ -55,9 +57,9 @@ function assignPoints() {
         points.push([]);
         for (let j = 0; j < height/w+1; j++) {
             points[i].push(createVector(i*w, j*w, random(-1, 1)));
-            // strokeWeight(2);
-            // stroke(points[i][j].z*255);
-            // point(points[i][j].x,points[i][j].y);
+            strokeWeight(2);
+            stroke(points[i][j].z*255);
+            point(points[i][j].x,points[i][j].y);
         }
     }
     // console.log(points);
@@ -81,14 +83,14 @@ function linie(point, pV) {
     stroke(255);
     strokeWeight(1);
     switch (sqType) {
-        case 1:
-        case 14:
-            line(point.x, point.y+w*0.5, point.x+w*0.5, point.y+w);
-            break;
-        case 2:
-        case 13:
-            line(point.x+w*0.5, point.y+w, point.x+w, point.y+w*0.5);
-            break;
+        // case 1:
+        // case 14:
+        //     line(point.x, point.y+w*0.5, point.x+w*0.5, point.y+w);
+        //     break;
+        // case 2:
+        // case 13:
+        //     line(point.x+w*0.5, point.y+w, point.x+w, point.y+w*0.5);
+        //     break;
         case 3:
         case 12:
             line(point.x, point.y+w*0.5, point.x+w, point.y+w*0.5);
@@ -97,22 +99,22 @@ function linie(point, pV) {
         case 11:
             line(point.x+w*0.5, point.y, point.x+w, point.y+w*0.5);
             break;
-        case 5:
-            line(point.x, point.y+w*0.5, point.x+w*0.5, point.y);
-            line(point.x+w*0.5, point.y+w, point.x+w, point.y+w*0.5);
-            break;
-        case 6:
-        case 9:
-            line(point.x+w*0.5, point.y, point.x+w*0.5, point.y+w);
-            break;
-        case 7:
-        case 8:
-            line(point.x, point.y+w*0.5, point.x+w*0.5, point.y);
-            break;
-        case 10:
-            line(point.x, point.y+w*0.5, point.x+w*0.5, point.y+w);
-            line(point.x+w*0.5, point.y, point.x+w, point.y+w*0.5);
-            break;
+        // case 5:
+        //     line(point.x, point.y+w*0.5, point.x+w*0.5, point.y);
+        //     line(point.x+w*0.5, point.y+w, point.x+w, point.y+w*0.5);
+        //     break;
+        // case 6:
+        // case 9:
+        //     line(point.x+w*0.5, point.y, point.x+w*0.5, point.y+w);
+        //     break;
+        // case 7:
+        // case 8:
+        //     line(point.x, point.y+w*0.5, point.x+w*0.5, point.y);
+        //     break;
+        // case 10:
+        //     line(point.x, point.y+w*0.5, point.x+w*0.5, point.y+w);
+        //     line(point.x+w*0.5, point.y, point.x+w, point.y+w*0.5);
+        //     break;
     }
 
 }
@@ -123,20 +125,20 @@ function fläche(point, pV) {
     noStroke();
     //fill(floorCOLOR);
     switch (sqType) {
-        case 1:
-            triangle(point.x, point.y+w*(1-pV[3]), point.x+w*pV[3], point.y+w, point.x, point.y+w);
-            break;
-        case 2:
-            triangle(point.x+w*(1-pV[2]), point.y+w, point.x+w, point.y+w*(1-pV[2]), point.x+w, point.y+w);
-            break;
-        case 3:
-            beginShape();
-                vertex(point.x, point.y+w*(1-pV[3]));
-                vertex(point.x+w, point.y+w*(1-pV[2]));
-                vertex(point.x+w, point.y+w);
-                vertex(point.x, point.y+w);
-            endShape(CLOSE);
-            break;
+        // case 1:
+        //     triangle(point.x, point.y+w*(1-pV[3]), point.x+w*pV[3], point.y+w, point.x, point.y+w);
+        //     break;
+        // case 2:
+        //     triangle(point.x+w*(1-pV[2]), point.y+w, point.x+w, point.y+w*(1-pV[2]), point.x+w, point.y+w);
+        //     break;
+        // case 3:
+        //     beginShape();
+        //         vertex(point.x, point.y+w*(1-pV[3]));
+        //         vertex(point.x+w, point.y+w*(1-pV[2]));
+        //         vertex(point.x+w, point.y+w);
+        //         vertex(point.x, point.y+w);
+        //     endShape(CLOSE);
+        //     break;
         case 4:
             triangle(point.x+w*0.5, point.y, point.x+w, point.y, point.x+w, point.y+w*0.5);
             break;
@@ -150,81 +152,81 @@ function fläche(point, pV) {
                 vertex(point.x, point.y+w);
             endShape(CLOSE);
             break;
-        case 6:
-            beginShape();
-                vertex(point.x+w*(1-pV[1]), point.y);
-                vertex(point.x+w, point.y);
-                vertex(point.x+w, point.y+w);
-                vertex(point.x+w*(1-pV[2]), point.y+w);
-            endShape(CLOSE);
-            break;
-        case 7:
-            beginShape();
-                vertex(point.x, point.y+w*(1-pV[3]));
-                vertex(point.x+w*(1-pV[1]), point.y);
-                vertex(point.x+w, point.y);
-                vertex(point.x+w, point.y+w);
-                vertex(point.x, point.y+w);
-            endShape(CLOSE);
-            break;
-        case 8:
-            triangle(point.x, point.y, point.x+w*pV[0], point.y, point.x, point.y+w*pV[0]);
-            break;
-        case 9:
-            beginShape();
-                vertex(point.x, point.y);
-                vertex(point.x+w*pV[0], point.y);
-                vertex(point.x+w*pV[3], point.y+w);
-                vertex(point.x, point.y+w);
-            endShape(CLOSE);
-            break;
-        case 10:
-            beginShape();
-                vertex(point.x, point.y);
-                vertex(point.x+w*pV[0], point.y);
-                vertex(point.x+w, point.y+w*(1-pV[2]));
-                vertex(point.x+w, point.y+w);
-                vertex(point.x+w*(1-pV[2]), point.y+w);
-                vertex(point.x, point.y+w*pV[0]);
-            endShape(CLOSE);
-            break;
-        case 11:
-            beginShape();
-                vertex(point.x, point.y);
-                vertex(point.x+w*pV[0], point.y);
-                vertex(point.x+w, point.y+w*(1-pV[2]));
-                vertex(point.x+w, point.y+w);
-                vertex(point.x, point.y+w);
-            endShape(CLOSE);
-            break;
-        case 12:
-            beginShape();
-                vertex(point.x, point.y);
-                vertex(point.x+w, point.y);
-                vertex(point.x+w, point.y+w*pV[1]);
-                vertex(point.x, point.y+w*pV[0]);
-            endShape(CLOSE);
-            break;
-        case 13:
-            beginShape();
-                vertex(point.x, point.y);
-                vertex(point.x+w, point.y);
-                vertex(point.x+w, point.y+w*pV[1]);
-                vertex(point.x+w*pV[3], point.y+w);
-                vertex(point.x, point.y+w);
-            endShape(CLOSE);
-            break;
-        case 14:
-            beginShape();
-                vertex(point.x, point.y);
-                vertex(point.x+w, point.y);
-                vertex(point.x+w, point.y+w);
-                vertex(point.x+w*(1-pV[2]), point.y+w);
-                vertex(point.x, point.y+w*pV[0]);
-            endShape(CLOSE);
-            break;
-        case 15:
-            rect(point.x, point.y, w, w);
-            break;
+        // case 6:
+        //     beginShape();
+        //         vertex(point.x+w*(1-pV[1]), point.y);
+        //         vertex(point.x+w, point.y);
+        //         vertex(point.x+w, point.y+w);
+        //         vertex(point.x+w*(1-pV[2]), point.y+w);
+        //     endShape(CLOSE);
+        //     break;
+        // case 7:
+        //     beginShape();
+        //         vertex(point.x, point.y+w*(1-pV[3]));
+        //         vertex(point.x+w*(1-pV[1]), point.y);
+        //         vertex(point.x+w, point.y);
+        //         vertex(point.x+w, point.y+w);
+        //         vertex(point.x, point.y+w);
+        //     endShape(CLOSE);
+        //     break;
+        // case 8:
+        //     triangle(point.x, point.y, point.x+w*pV[0], point.y, point.x, point.y+w*pV[0]);
+        //     break;
+        // case 9:
+        //     beginShape();
+        //         vertex(point.x, point.y);
+        //         vertex(point.x+w*pV[0], point.y);
+        //         vertex(point.x+w*pV[3], point.y+w);
+        //         vertex(point.x, point.y+w);
+        //     endShape(CLOSE);
+        //     break;
+        // case 10:
+        //     beginShape();
+        //         vertex(point.x, point.y);
+        //         vertex(point.x+w*pV[0], point.y);
+        //         vertex(point.x+w, point.y+w*(1-pV[2]));
+        //         vertex(point.x+w, point.y+w);
+        //         vertex(point.x+w*(1-pV[2]), point.y+w);
+        //         vertex(point.x, point.y+w*pV[0]);
+        //     endShape(CLOSE);
+        //     break;
+        // case 11:
+        //     beginShape();
+        //         vertex(point.x, point.y);
+        //         vertex(point.x+w*pV[0], point.y);
+        //         vertex(point.x+w, point.y+w*(1-pV[2]));
+        //         vertex(point.x+w, point.y+w);
+        //         vertex(point.x, point.y+w);
+        //     endShape(CLOSE);
+        //     break;
+        // case 12:
+        //     beginShape();
+        //         vertex(point.x, point.y);
+        //         vertex(point.x+w, point.y);
+        //         vertex(point.x+w, point.y+w*pV[1]);
+        //         vertex(point.x, point.y+w*pV[0]);
+        //     endShape(CLOSE);
+        //     break;
+        // case 13:
+        //     beginShape();
+        //         vertex(point.x, point.y);
+        //         vertex(point.x+w, point.y);
+        //         vertex(point.x+w, point.y+w*pV[1]);
+        //         vertex(point.x+w*pV[3], point.y+w);
+        //         vertex(point.x, point.y+w);
+        //     endShape(CLOSE);
+        //     break;
+        // case 14:
+        //     beginShape();
+        //         vertex(point.x, point.y);
+        //         vertex(point.x+w, point.y);
+        //         vertex(point.x+w, point.y+w);
+        //         vertex(point.x+w*(1-pV[2]), point.y+w);
+        //         vertex(point.x, point.y+w*pV[0]);
+        //     endShape(CLOSE);
+        //     break;
+        // case 15:
+        //     rect(point.x, point.y, w, w);
+        //     break;
     }
 }
